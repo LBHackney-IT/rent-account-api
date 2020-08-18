@@ -19,21 +19,7 @@ Rent Account API
 
 ### Development
 
-To serve the application, run it using your IDE of choice, we use Visual Studio CE and JetBrains Rider on Mac.
 
-The application can also be served locally using docker:
-1.  Add you security credentials to AWS CLI.
-```sh
-$ aws configure
-```
-2. Log into AWS ECR.
-```sh
-$ aws ecr get-login --no-include-email
-```
-3. Build and serve the application. It will be available in the port 3000.
-```sh
-$ make build && make serve
-```
 
 ### Release process
 
@@ -88,15 +74,6 @@ Note: The Host name needs to be the name of the stub database docker-compose ser
 - Unit tests and E2E tests should run in CI
 - Test database schemas should match up with production database schema
 - Have integration tests which test from the PostgreSQL database to API Gateway
-
-## Data Migrations
-### A good data migration
-- Record failure logs
-- Automated
-- Reliable
-- As close to real time as possible
-- Observable monitoring in place
-- Should not affect any existing databases
 
 ## Contacts
 
