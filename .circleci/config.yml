@@ -77,13 +77,13 @@ commands:
       - run:
           name: Build lambda
           command: |
-            cd ./BaseApi/
+            cd ./RentAccountApi/
             chmod +x ./build.sh
             ./build.sh
       - run:
           name: Deploy lambda
           command: |
-            cd ./BaseApi/
+            cd ./RentAccountApi/
             sls deploy --stage <<parameters.stage>> --conceal
 
 jobs:
@@ -104,10 +104,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose build base-api-test
+          command: docker-compose build rent-account-api-test
       - run:
           name: Run tests
-          command: docker-compose run base-api-test
+          command: docker-compose run rent-account-api-test
   assume-role-development:
     executor: docker-python
     steps:

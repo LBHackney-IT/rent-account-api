@@ -1,10 +1,10 @@
 version: "3.2"
 
 services:
-  base-api:
-    image: base-api
+  rent_account_api:
+    image: rent_account_api
     build:
-      context: BaseApi/
+      context: RentAccountApi/
       dockerfile: ./Dockerfile
     ports:
       - 3000:3000
@@ -19,11 +19,11 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
 
-  base-api-test:
-    image: base-api-test
+  rent_account_api-test:
+    image: rent_account_api-test
     build:
       context: .
-      dockerfile: BaseApi.Tests/Dockerfile
+      dockerfile: RentAccountApi.Tests/Dockerfile
     environment:
       - DB_HOST=test-database
       - DB_PORT=5432
