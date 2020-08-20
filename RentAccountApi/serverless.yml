@@ -1,4 +1,10 @@
 service: rent-account-api
+custom:
+  # Our stage is based on what is passed in when running serverless
+  # commands. Or fallsback to what we have set in the provider section.
+  stage: ${opt:stage, self:provider.stage}
+  # Set the table name here so we can use it while testing locally
+  tableName: ${self:custom.stage}-MRAAuditTable
 provider:
   name: aws
   runtime: dotnetcore3.1
@@ -24,8 +30,7 @@ functions:
     handler: RentAccountApi::RentAccountApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-# TODO: Create ssm variables for this API's postgres mirror then rename rent_account_api below to match api name
-      CONNECTION_STRING: Host=${ssm:/rent_account_api/${self:provider.stage}/postgres-hostname};Port=${ssm:/rent_account_api/${self:provider.stage}/postgres-port};Database=rent_account_api-mirror;Username=${ssm:/rent_account_api/${self:provider.stage}/postgres-username};Password=${ssm:/rent_account_api/${self:provider.stage}/postgres-password}
+      tableName: ${self:custom.tableName}
     events:
       - http:
           path: /{proxy+}
@@ -82,10 +87,24 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
+          - PolicyName: dynamoAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:DescribeTable
+                    - dynamodb:Query
+                    - dynamodb:Scan
+                    - dynamodb:GetItem
+                    - dynamodb:PutItem
+                  Resource:
+                    - "Fn::GetAtt": [ MRAAuditTable, Arn ]
     MRAAuditTable:
       Type: AWS::DynamoDB::Table
+      DeletionPolicy: Retain
       Properties:
-        TableName: MyRentAccountAudit
+        TableName: ${self:custom.tableName}
         AttributeDefinitions:
           - AttributeName: user
             AttributeType: S
