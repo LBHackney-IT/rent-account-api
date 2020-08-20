@@ -82,6 +82,21 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
+    MRAAuditTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: MyRentAccountAudit
+        AttributeDefinitions:
+          - AttributeName: user
+            AttributeType: S
+          - AttributeName: time
+            AttributeType: S
+        KeySchema:
+          - AttributeName: user
+            KeyType: HASH
+          - AttributeName: time
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
 custom:
   vpc:
     development:
