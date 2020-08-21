@@ -24,7 +24,7 @@ functions:
     handler: RentAccountApi::RentAccountApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      tableName: ${self:custom.tableName}
+      TABLE_NAME: ${self:custom.tableName}
     events:
       - http:
           path: /{proxy+}
@@ -102,12 +102,12 @@ resources:
         AttributeDefinitions:
           - AttributeName: user
             AttributeType: S
-          - AttributeName: time
+          - AttributeName: timestamp
             AttributeType: S
         KeySchema:
           - AttributeName: user
             KeyType: HASH
-          - AttributeName: time
+          - AttributeName: timestamp
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
 custom:
@@ -115,7 +115,7 @@ custom:
   # commands. Or fallsback to what we have set in the provider section.
   stage: ${opt:stage, self:provider.stage}
   # Set the table name here so we can use it while testing locally
-  tableName: ${self:custom.stage}-MRAAuditTable
+  TABLE_NAME: ${self:custom.stage}-MRAAuditTable
   vpc:
     development:
       subnetIds:

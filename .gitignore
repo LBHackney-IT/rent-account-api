@@ -59,7 +59,8 @@ bin/
 .idea/
 tmp/
 .vs/
-/rent_account_api.Tests/Properties/launchSettings.json
+/RentAccountApi/Properties/launchSettings.json
+/RentAccountApi.Tests/Properties/launchSettings.json
 
 .fake
 .ionide

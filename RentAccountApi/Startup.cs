@@ -19,6 +19,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Amazon.DynamoDBv2;
+using Amazon;
+using RentAccountApi.V1.Boundary;
+using System.Globalization;
 
 namespace RentAccountApi
 {
@@ -31,8 +35,7 @@ namespace RentAccountApi
 
         public IConfiguration Configuration { get; }
         private static List<ApiVersionDescription> _apiVersions { get; set; }
-        //TODO update the below to the name of your API
-        private const string ApiName = "Your API Name";
+        private const string ApiName = "Rent Account API";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public static void ConfigureServices(IServiceCollection services)
@@ -112,21 +115,32 @@ namespace RentAccountApi
 
         private static void ConfigureDbContext(IServiceCollection services)
         {
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig();
+            // Set the endpoint URL
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (env.ToUpper(CultureInfo.CurrentCulture) == "DEVELOPMENT")
+            {
+                clientConfig.ServiceURL = "http://localhost:8000";
+            }
+            else
+            {
+                clientConfig.RegionEndpoint = RegionEndpoint.EUWest2;
+            }
 
-            services.AddDbContext<DatabaseContext>(
-                opt => opt.UseNpgsql(connectionString));
+            var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
+            AmazonDynamoDBClient client = new AmazonDynamoDBClient(clientConfig);
+            services.AddScoped<IDynamoDBContext<MyRentAccountAudit>>(provider => new DynamoDBContext<MyRentAccountAudit>(client, tableName));
         }
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            services.AddScoped<IExampleGateway, ExampleGateway>();
+            //var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
+            services.AddScoped<IAuditDatabaseGateway, AuditDatabaseGateway>();
         }
 
         private static void RegisterUseCases(IServiceCollection services)
         {
-            services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-            services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
+            services.AddScoped<IPostAuditUseCase, PostAuditUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
