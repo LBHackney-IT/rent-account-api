@@ -29,7 +29,7 @@ namespace RentAccountApi.Tests.V1.Controllers
         public void EnsureControllerPostMethodCallsPostAuditUseCase()
         {
             _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<AuditRequestObject>()));
-            _classUnderTest.GenerateToken(It.IsAny<AuditRequestObject>());
+            _classUnderTest.GenerateAuditLog(It.IsAny<AuditRequestObject>());
 
             _mockPostAuditUseCase.Verify(x => x.Execute(It.IsAny<AuditRequestObject>()), Times.Once);
         }
@@ -38,7 +38,7 @@ namespace RentAccountApi.Tests.V1.Controllers
         public void ControllerPostMethodShouldReturnResponseOfTypeNoContentResult()
         {
             _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<AuditRequestObject>()));
-            var result = _classUnderTest.GenerateToken(It.IsAny<AuditRequestObject>()) as NoContentResult;
+            var result = _classUnderTest.GenerateAuditLog(It.IsAny<AuditRequestObject>()) as NoContentResult;
 
             result.Should().NotBeNull();
             result.Should().BeOfType<NoContentResult>();
@@ -48,7 +48,7 @@ namespace RentAccountApi.Tests.V1.Controllers
         public void ControllerPostMethodShouldReturn204StatusCode()
         {
             _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<AuditRequestObject>()));
-            var result = _classUnderTest.GenerateToken(It.IsAny<AuditRequestObject>()) as NoContentResult;
+            var result = _classUnderTest.GenerateAuditLog(It.IsAny<AuditRequestObject>()) as NoContentResult;
 
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(204);
