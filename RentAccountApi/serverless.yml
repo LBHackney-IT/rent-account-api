@@ -102,12 +102,12 @@ resources:
         AttributeDefinitions:
           - AttributeName: user
             AttributeType: S
-          - AttributeName: time
+          - AttributeName: timestamp
             AttributeType: S
         KeySchema:
           - AttributeName: user
             KeyType: HASH
-          - AttributeName: time
+          - AttributeName: timestamp
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
 custom:

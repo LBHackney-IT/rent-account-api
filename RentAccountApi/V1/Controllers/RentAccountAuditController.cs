@@ -24,7 +24,7 @@ namespace RentAccountApi.V1.Controllers
         /// <summary>
         /// Records an audit log for users accessing rent accounts
         /// </summary>
-        /// <response code="204">Token successfully generated</response>
+        /// <response code="204">Audit Log successfully generated</response>
         /// <response code="400">One or more request parameters are invalid or missing</response>
         /// <response code="500">There was a problem recording an audit.</response>
         [Consumes(MediaTypeNames.Application.Json)]
@@ -37,9 +37,9 @@ namespace RentAccountApi.V1.Controllers
                 _postAuditUseCase.Execute(auditRequest);
                 return new NoContentResult();
             }
-            catch (AuditNotInsertedException)
+            catch (AuditNotInsertedException ex)
             {
-                return StatusCode(500, "There was a problem inserting the audit data into the database.");
+                return StatusCode(500, string.Format("There was a problem inserting the audit data into the database.{0}",ex.Message));
             }
         }
     }

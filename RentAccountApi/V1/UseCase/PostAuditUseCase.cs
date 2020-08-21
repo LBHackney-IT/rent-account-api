@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RentAccountApi.V1.Factories;
 
 namespace RentAccountApi.V1.UseCase
 {
@@ -19,7 +20,7 @@ namespace RentAccountApi.V1.UseCase
         public void Execute(AuditRequestObject auditRequest)
         {
             //TODO: workout what response we get from DynamoDB when we put an object
-            _gateway.GenerateAuditRecord(auditRequest);
+            _gateway.GenerateAuditRecord(AuditFactory.ToAuditRequest(auditRequest));
         }
     }
 }
