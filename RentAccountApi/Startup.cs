@@ -20,9 +20,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Amazon.DynamoDBv2;
+using Amazon.Lambda.Core;
 using Amazon;
 using RentAccountApi.V1.Boundary;
 using System.Globalization;
+using Amazon.Runtime.Internal.Util;
 
 namespace RentAccountApi
 {
@@ -129,6 +131,7 @@ namespace RentAccountApi
 
             var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
             AmazonDynamoDBClient client = new AmazonDynamoDBClient(clientConfig);
+            LambdaLogger.Log(string.Format("ServiceURL{0}, Table{1}", client.Config.DetermineServiceURL(), tableName));
             services.AddScoped<IDynamoDBContext<MyRentAccountAudit>>(provider => new DynamoDBContext<MyRentAccountAudit>(client, tableName));
         }
 

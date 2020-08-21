@@ -30,7 +30,7 @@ namespace RentAccountApi.V1.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
         [HttpPost]
-        public IActionResult GenerateToken([FromBody] AuditRequestObject auditRequest)
+        public IActionResult GenerateAuditLog([FromBody] AuditRequestObject auditRequest)
         {
             try
             {
