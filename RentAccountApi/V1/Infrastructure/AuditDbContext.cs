@@ -14,7 +14,7 @@ namespace RentAccountApi.V1.Infrastructure
     {
         private DynamoDBOperationConfig _config;
 
-        public DynamoDBContext(IAmazonDynamoDB client, string tableName)  : base(client)
+        public DynamoDBContext(IAmazonDynamoDB client, string tableName) : base(client)
         {
             _config = new DynamoDBOperationConfig()
             {

@@ -12,7 +12,7 @@ namespace RentAccountApi.V1.Domain
 
         }
 
-        public AuditNotInsertedException(string message): base(message)
+        public AuditNotInsertedException(string message) : base(message)
         {
 
         }

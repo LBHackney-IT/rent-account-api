@@ -13,7 +13,7 @@ namespace RentAccountApi.V1.Controllers
     [ApiVersion("1.0")]
     public class RentAccountAuditController : BaseController
     {
-        
+
         private readonly IPostAuditUseCase _postAuditUseCase;
 
         public RentAccountAuditController(IPostAuditUseCase postAuditUseCase)
@@ -39,7 +39,7 @@ namespace RentAccountApi.V1.Controllers
             }
             catch (AuditNotInsertedException ex)
             {
-                return StatusCode(500, string.Format("There was a problem inserting the audit data into the database.{0}",ex.Message));
+                return StatusCode(500, string.Format("There was a problem inserting the audit data into the database.{0}", ex.Message));
             }
         }
     }

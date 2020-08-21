@@ -114,7 +114,7 @@ namespace RentAccountApi
         }
 
         private static void ConfigureDbContext(IServiceCollection services)
-        {            
+        {
             AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig();
             // Set the endpoint URL
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
