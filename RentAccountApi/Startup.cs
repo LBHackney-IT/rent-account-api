@@ -25,6 +25,7 @@ using Amazon;
 using RentAccountApi.V1.Boundary;
 using System.Globalization;
 using Amazon.Runtime.Internal.Util;
+using Gateways;
 
 namespace RentAccountApi
 {
@@ -117,22 +118,25 @@ namespace RentAccountApi
 
         private static void ConfigureDbContext(IServiceCollection services)
         {
-            AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig();
+
+            //Dynamo DB
+            var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
+            LambdaLogger.Log($"Dynamo table name {tableName}");
+            var dynamoConfig = new AmazonDynamoDBConfig { RegionEndpoint = RegionEndpoint.EUWest2 };
+            var dynamoDbClient = new DynamoDBClient(dynamoConfig);
             // Set the endpoint URL
+
             var env = Environment.GetEnvironmentVariable("ENV");
-            if (env.ToUpper(CultureInfo.CurrentCulture) == "DEVELOPMENT")
+            if (env.ToUpper(CultureInfo.CurrentCulture) == "local")
             {
-                clientConfig.ServiceURL = "http://localhost:8000";
+                dynamoConfig.ServiceURL = "http://localhost:8000";
             }
             else
             {
-                clientConfig.RegionEndpoint = RegionEndpoint.EUWest2;
+                dynamoConfig.RegionEndpoint = RegionEndpoint.EUWest2;
             }
-
-            var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
-            AmazonDynamoDBClient client = new AmazonDynamoDBClient(clientConfig);
-            LambdaLogger.Log(string.Format("ServiceURL{0}, Table{1}", client.Config.DetermineServiceURL(), tableName));
-            services.AddScoped<IDynamoDBContext<MyRentAccountAudit>>(provider => new DynamoDBContext<MyRentAccountAudit>(client, tableName));
+            LambdaLogger.Log(string.Format("ServiceURL-{0}, Region-{1}, Table-{2}", dynamoDbClient.Client.Config.DetermineServiceURL(), dynamoDbClient.Client.Config.RegionEndpoint, tableName));
+            services.AddTransient<IDynamoDBHandler>(sp => new DynamoDBHandler(tableName, dynamoDbClient));
         }
 
         private static void RegisterGateways(IServiceCollection services)
