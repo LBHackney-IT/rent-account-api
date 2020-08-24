@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoFixture" Version="4.11.0" />
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.106.47" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.4" />
@@ -25,6 +26,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RentAccountApi\RentAccountApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="V1\E2ETests\" />
+    <Folder Include="V1\Gateways\" />
+    <Folder Include="V1\Helper\" />
+    <Folder Include="V1\Infrastructure\" />
   </ItemGroup>
 
 </Project>

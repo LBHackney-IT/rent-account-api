@@ -1,8 +1,8 @@
 version: "3.2"
 
 services:
-  rent_account_api:
-    image: rent_account_api
+  rent-account-api:
+    image: rent-account-api
     build:
       context: RentAccountApi/
       dockerfile: ./Dockerfile
@@ -19,8 +19,8 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
 
-  rent_account_api-test:
-    image: rent_account_api-test
+  rent-account-api-test:
+    image: rent-account-api-test
     build:
       context: .
       dockerfile: RentAccountApi.Tests/Dockerfile

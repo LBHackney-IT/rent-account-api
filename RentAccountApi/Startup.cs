@@ -19,6 +19,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Amazon.DynamoDBv2;
+using Amazon.Lambda.Core;
+using Amazon;
+using RentAccountApi.V1.Boundary;
+using System.Globalization;
+using Amazon.Runtime.Internal.Util;
+using Gateways;
 
 namespace RentAccountApi
 {
@@ -31,8 +38,7 @@ namespace RentAccountApi
 
         public IConfiguration Configuration { get; }
         private static List<ApiVersionDescription> _apiVersions { get; set; }
-        //TODO update the below to the name of your API
-        private const string ApiName = "Your API Name";
+        private const string ApiName = "Rent Account API";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public static void ConfigureServices(IServiceCollection services)
@@ -112,21 +118,36 @@ namespace RentAccountApi
 
         private static void ConfigureDbContext(IServiceCollection services)
         {
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
-            services.AddDbContext<DatabaseContext>(
-                opt => opt.UseNpgsql(connectionString));
+            //Dynamo DB
+            var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
+            LambdaLogger.Log($"Dynamo table name {tableName}");
+            var dynamoConfig = new AmazonDynamoDBConfig { RegionEndpoint = RegionEndpoint.EUWest2 };
+            var dynamoDbClient = new DynamoDBClient(dynamoConfig);
+            // Set the endpoint URL
+
+            var env = Environment.GetEnvironmentVariable("ENV");
+            if (env.ToUpper(CultureInfo.CurrentCulture) == "local")
+            {
+                dynamoConfig.ServiceURL = "http://localhost:8000";
+            }
+            else
+            {
+                dynamoConfig.RegionEndpoint = RegionEndpoint.EUWest2;
+            }
+            LambdaLogger.Log(string.Format("ServiceURL-{0}, Region-{1}, Table-{2}", dynamoDbClient.Client.Config.DetermineServiceURL(), dynamoDbClient.Client.Config.RegionEndpoint, tableName));
+            services.AddTransient<IDynamoDBHandler>(sp => new DynamoDBHandler(tableName, dynamoDbClient));
         }
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            services.AddScoped<IExampleGateway, ExampleGateway>();
+            //var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
+            services.AddScoped<IAuditDatabaseGateway, AuditDatabaseGateway>();
         }
 
         private static void RegisterUseCases(IServiceCollection services)
         {
-            services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-            services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
+            services.AddScoped<IPostAuditUseCase, PostAuditUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
