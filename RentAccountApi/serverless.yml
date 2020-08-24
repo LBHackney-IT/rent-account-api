@@ -13,6 +13,8 @@ provider:
         throttle:
           burstLimit: 200
           rateLimit: 100
+  environment:
+    TABLE_NAME: MRAAuditTable-${self:provider.stage}
 
 package:
 # TODO: Rename zipfile in build.sh and build.cmd to match this
@@ -24,7 +26,8 @@ functions:
     handler: RentAccountApi::RentAccountApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      TABLE_NAME: ${self:custom.tableName}
+      TABLE_NAME: ${self:provider.environment.TABLE_NAME}
+      ENV: ${self:provider.stage}
     events:
       - http:
           path: /{proxy+}
@@ -98,16 +101,16 @@ resources:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:custom.tableName}
+        TableName: ${self:provider.environment.TABLE_NAME}
         AttributeDefinitions:
-          - AttributeName: user
+          - AttributeName: User
             AttributeType: S
-          - AttributeName: timestamp
+          - AttributeName: TimeStamp
             AttributeType: S
         KeySchema:
-          - AttributeName: user
+          - AttributeName: User
             KeyType: HASH
-          - AttributeName: timestamp
+          - AttributeName: TimeStamp
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
 custom:
@@ -115,7 +118,6 @@ custom:
   # commands. Or fallsback to what we have set in the provider section.
   stage: ${opt:stage, self:provider.stage}
   # Set the table name here so we can use it while testing locally
-  TABLE_NAME: ${self:custom.stage}-MRAAuditTable
   vpc:
     development:
       subnetIds:

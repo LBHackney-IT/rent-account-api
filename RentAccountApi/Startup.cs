@@ -119,7 +119,7 @@ namespace RentAccountApi
         {
             AmazonDynamoDBConfig clientConfig = new AmazonDynamoDBConfig();
             // Set the endpoint URL
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var env = Environment.GetEnvironmentVariable("ENV");
             if (env.ToUpper(CultureInfo.CurrentCulture) == "DEVELOPMENT")
             {
                 clientConfig.ServiceURL = "http://localhost:8000";
