@@ -17,8 +17,20 @@ namespace RentAccountApi.V1.Factories
             {
                 User = auditRequestObject.User,
                 RentAccountNumber = auditRequestObject.RentAccountNumber,
-                TimeStamp = DateTime.Now.ToUniversalTime().ToString("s")
+                TimeStamp = FormatToUkDate(DateTime.Now).ToString("o")
             };
+        }
+
+        private static DateTime FormatToUkDate(DateTime date)
+        {
+            //try to convert if the OSVersion isn't Windows
+            if (!Environment.OSVersion.VersionString.ToLower().Contains("windows"))
+            {
+                var ukTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/London");
+                date = TimeZoneInfo.ConvertTime(date, TimeZoneInfo.Local, ukTimeZone);
+            }
+
+            return date;
         }
     }
 }
