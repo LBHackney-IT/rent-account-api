@@ -17,5 +17,9 @@ namespace RentAccountApi.V1.Boundary.Response
         /// 2020-08-24T15:58:57.8571170
         /// </example>
         public string TimeStamp { get; set; }
+        /// <example>
+        /// true
+        /// </example>
+        public bool CSSOLogin { get; set; }
     }
 }

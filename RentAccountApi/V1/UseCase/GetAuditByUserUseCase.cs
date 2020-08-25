@@ -29,7 +29,8 @@ namespace RentAccountApi.V1.UseCase
             {
                 User = record.User,
                 TimeStamp = record.TimeStamp,
-                RentAccountNumber = record.RentAccountNumber
+                RentAccountNumber = record.RentAccountNumber,
+                CSSOLogin = bool.Parse(record.CSSOLogin)
 
             }).ToList();
 

@@ -74,6 +74,7 @@ namespace RentAccountApi.V1.Gateways
                 User = entry["User"].S?.ToString(),
                 RentAccountNumber = entry["RentAccountNumber"].S?.ToString(),
                 TimeStamp = entry["TimeStamp"].S?.ToString(),
+                CSSOLogin = entry["CSSOLogin"].S?.ToString()
             }).ToList();
         }
 
