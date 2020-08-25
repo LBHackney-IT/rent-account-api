@@ -51,7 +51,7 @@ namespace RentAccountApi.Tests.V1.UseCase
                         CSSOLogin = _faker.Random.Bool().ToString()
                     }
                 };
-            
+
             _mockAuditGateway.Setup(x => x.GetAuditByUser("matt@matt.com")).ReturnsAsync(stubbedAudits);
 
             var response = _classUnderTest.GetAuditByUser("matt@matt.com");

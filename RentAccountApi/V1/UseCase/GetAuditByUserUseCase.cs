@@ -25,7 +25,7 @@ namespace RentAccountApi.V1.UseCase
         {
             var auditRecords = await _gateway.GetAuditByUser(userEmail);
 
-            return AuditFactory.ToGetAllAuditsResponse(auditRecords);            
+            return AuditFactory.ToGetAllAuditsResponse(auditRecords);
         }
     }
 }
