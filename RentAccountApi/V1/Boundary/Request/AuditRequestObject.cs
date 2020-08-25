@@ -14,5 +14,10 @@ namespace RentAccountApi.V1.Boundary.Request
         /// </example>
         [Required]
         public string RentAccountNumber { get; set; }
+        /// <example>
+        /// true
+        /// </example>
+        [Required]
+        public string CSSOLogin { get; set; }
     }
 }
