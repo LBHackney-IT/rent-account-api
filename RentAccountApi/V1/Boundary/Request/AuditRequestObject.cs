@@ -18,6 +18,6 @@ namespace RentAccountApi.V1.Boundary.Request
         /// true
         /// </example>
         [Required]
-        public string CSSOLogin { get; set; }
+        public bool CSSOLogin { get; set; }
     }
 }

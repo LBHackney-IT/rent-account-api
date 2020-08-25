@@ -18,7 +18,7 @@ namespace RentAccountApi.V1.Factories
                 User = auditRequestObject.User,
                 RentAccountNumber = auditRequestObject.RentAccountNumber,
                 TimeStamp = FormatToUkDate(DateTime.Now).ToString("o"),
-                CSSOLogin = auditRequestObject.CSSOLogin
+                CSSOLogin = auditRequestObject.CSSOLogin.ToString()
             };
         }
 
