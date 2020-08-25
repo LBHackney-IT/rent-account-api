@@ -20,7 +20,6 @@ namespace RentAccountApi.Tests.V1.UseCase
     {
         private Mock<IAuditDatabaseGateway> _mockAuditGateway;
         private GetAuditByUserUseCase _classUnderTest;
-        //private Fixture _fixture = new Fixture();
         private Faker _faker;
 
         [SetUp]
@@ -53,7 +52,6 @@ namespace RentAccountApi.Tests.V1.UseCase
                     }
                 };
             
-
             _mockAuditGateway.Setup(x => x.GetAuditByUser("matt@matt.com")).ReturnsAsync(stubbedAudits);
 
             var response = _classUnderTest.GetAuditByUser("matt@matt.com");
