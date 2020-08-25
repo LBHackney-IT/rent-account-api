@@ -7,6 +7,6 @@ namespace RentAccountApi.V1.UseCase.Interfaces
 {
     public interface IGetAuditByUserUseCase
     {
-        Task<GetAllAuditsResponse> GetAuditByUser(string userEmail);        
+        Task<GetAllAuditsResponse> GetAuditByUser(string userEmail);
     }
 }
