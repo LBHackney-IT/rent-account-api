@@ -25,19 +25,7 @@ namespace RentAccountApi.V1.UseCase
         {
             var auditRecords = await _gateway.GetAuditByUser(userEmail);
 
-            var auditResponse = auditRecords.Select(record => new AuditResponse
-            {
-                User = record.User,
-                TimeStamp = record.TimeStamp,
-                RentAccountNumber = record.RentAccountNumber,
-                CSSOLogin = bool.Parse(record.CSSOLogin)
-
-            }).ToList();
-
-            return new GetAllAuditsResponse
-            {
-                AuditRecords = auditResponse
-            };
+            return AuditFactory.ToGetAllAuditsResponse(auditRecords);            
         }
     }
 }

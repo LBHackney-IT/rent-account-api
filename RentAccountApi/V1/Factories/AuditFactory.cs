@@ -1,8 +1,11 @@
 using RentAccountApi.V1.Boundary;
 using RentAccountApi.V1.Boundary.Request;
+using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using RentAccountApi.V1.Infrastructure;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RentAccountApi.V1.Factories
 {
@@ -19,6 +22,23 @@ namespace RentAccountApi.V1.Factories
                 RentAccountNumber = auditRequestObject.RentAccountNumber,
                 TimeStamp = FormatToUkDate(DateTime.Now).ToString("o"),
                 CSSOLogin = auditRequestObject.CSSOLogin.ToString()
+            };
+        }
+
+        public static GetAllAuditsResponse ToGetAllAuditsResponse(List<AuditRecord> auditRecords)
+        {
+            var auditResponse = auditRecords.Select(record => new AuditResponse
+            {
+                User = record.User,
+                TimeStamp = record.TimeStamp,
+                RentAccountNumber = record.RentAccountNumber,
+                CSSOLogin = bool.Parse(record.CSSOLogin)
+
+            }).ToList();
+
+            return new GetAllAuditsResponse
+            {
+                AuditRecords = auditResponse
             };
         }
 
