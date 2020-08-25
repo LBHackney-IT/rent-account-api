@@ -83,7 +83,8 @@ namespace RentAccountApi.V1.Gateways
             {
                 ["User"] = generateAuditRequest.User,
                 ["TimeStamp"] = generateAuditRequest.TimeStamp,
-                ["RentAccountNumber"] = generateAuditRequest.RentAccountNumber
+                ["RentAccountNumber"] = generateAuditRequest.RentAccountNumber,
+                ["CSSOLogin"] = generateAuditRequest.CSSOLogin
             };
         }
     }
