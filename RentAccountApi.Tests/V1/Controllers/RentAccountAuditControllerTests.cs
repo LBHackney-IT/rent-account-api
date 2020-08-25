@@ -17,28 +17,30 @@ namespace RentAccountApi.Tests.V1.Controllers
     {
         private RentAccountAuditController _classUnderTest;
         private Mock<IPostAuditUseCase> _mockPostAuditUseCase;
+        private Mock<IGetAuditByUserUseCase> _mockGetAuditByUserUseCase;
 
         [SetUp]
         public void Setup()
         {
             _mockPostAuditUseCase = new Mock<IPostAuditUseCase>();
-            _classUnderTest = new RentAccountAuditController(_mockPostAuditUseCase.Object);
+            _mockGetAuditByUserUseCase = new Mock<IGetAuditByUserUseCase>();
+            _classUnderTest = new RentAccountAuditController(_mockPostAuditUseCase.Object, _mockGetAuditByUserUseCase.Object);
         }
 
         [Test]
         public void EnsureControllerPostMethodCallsPostAuditUseCase()
         {
-            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<AuditRequestObject>()));
-            _classUnderTest.GenerateAuditLog(It.IsAny<AuditRequestObject>());
+            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<CreateAuditRequest>()));
+            _classUnderTest.GenerateAuditLog(It.IsAny<CreateAuditRequest>());
 
-            _mockPostAuditUseCase.Verify(x => x.Execute(It.IsAny<AuditRequestObject>()), Times.Once);
+            _mockPostAuditUseCase.Verify(x => x.Execute(It.IsAny<CreateAuditRequest>()), Times.Once);
         }
 
         [Test]
         public void ControllerPostMethodShouldReturnResponseOfTypeNoContentResult()
         {
-            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<AuditRequestObject>()));
-            var result = _classUnderTest.GenerateAuditLog(It.IsAny<AuditRequestObject>()) as NoContentResult;
+            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<CreateAuditRequest>()));
+            var result = _classUnderTest.GenerateAuditLog(It.IsAny<CreateAuditRequest>()) as NoContentResult;
 
             result.Should().NotBeNull();
             result.Should().BeOfType<NoContentResult>();
@@ -47,8 +49,8 @@ namespace RentAccountApi.Tests.V1.Controllers
         [Test]
         public void ControllerPostMethodShouldReturn204StatusCode()
         {
-            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<AuditRequestObject>()));
-            var result = _classUnderTest.GenerateAuditLog(It.IsAny<AuditRequestObject>()) as NoContentResult;
+            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<CreateAuditRequest>()));
+            var result = _classUnderTest.GenerateAuditLog(It.IsAny<CreateAuditRequest>()) as NoContentResult;
 
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(204);

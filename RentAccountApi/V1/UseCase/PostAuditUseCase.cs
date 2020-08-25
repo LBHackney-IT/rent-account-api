@@ -17,7 +17,7 @@ namespace RentAccountApi.V1.UseCase
             _gateway = gateway;
         }
 
-        public void Execute(AuditRequestObject auditRequest)
+        public void Execute(CreateAuditRequest auditRequest)
         {
             //TODO: workout what response we get from DynamoDB when we put an object
             _gateway.GenerateAuditRecord(AuditFactory.ToAuditRequest(auditRequest));

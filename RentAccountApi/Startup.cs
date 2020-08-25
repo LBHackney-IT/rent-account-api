@@ -111,6 +111,7 @@ namespace RentAccountApi
                 if (File.Exists(xmlPath))
                     c.IncludeXmlComments(xmlPath);
             });
+
             ConfigureDbContext(services);
             RegisterGateways(services);
             RegisterUseCases(services);
@@ -148,6 +149,7 @@ namespace RentAccountApi
         private static void RegisterUseCases(IServiceCollection services)
         {
             services.AddScoped<IPostAuditUseCase, PostAuditUseCase>();
+            services.AddScoped<IGetAuditByUserUseCase, GetAuditByUserUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

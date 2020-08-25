@@ -8,7 +8,7 @@ namespace RentAccountApi.V1.Factories
 {
     public static class AuditFactory
     {
-        public static MyRentAccountAudit ToAuditRequest(AuditRequestObject auditRequestObject)
+        public static MyRentAccountAudit ToAuditRequest(CreateAuditRequest auditRequestObject)
         {
             //TODO: Map the rest of the fields in the domain object.
             // More information on this can be found here https://github.com/LBHackney-IT/lbh-base-api/wiki/Factory-object-mappings

@@ -20,7 +20,7 @@ namespace RentAccountApi.Tests.V1.Factories
         [Test]
         public void CanMapInputToGenerateAuditRequestObject()
         {
-            var auditRequest = new AuditRequestObject
+            var auditRequest = new CreateAuditRequest
             {
                 User = _faker.Random.String(),
                 RentAccountNumber = _faker.Random.Int(5).ToString()
