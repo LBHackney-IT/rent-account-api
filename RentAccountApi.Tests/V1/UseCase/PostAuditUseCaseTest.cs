@@ -38,12 +38,13 @@ namespace RentAccountApi.Tests.V1.UseCase
             _mockGateway.Verify(x => x.GenerateAuditRecord(It.IsAny<MyRentAccountAudit>()), Times.Once);
         }
 
-        private AuditRequestObject GetAuditRequestObject()
+        private CreateAuditRequest GetAuditRequestObject()
         {
-            return new AuditRequestObject
+            return new CreateAuditRequest
             {
                 User = _faker.Random.String(),
-                RentAccountNumber = _faker.Random.String()
+                RentAccountNumber = _faker.Random.String(),
+                CSSOLogin = _faker.Random.Bool()
             };
         }
     }

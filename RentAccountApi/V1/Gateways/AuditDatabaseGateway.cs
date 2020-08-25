@@ -14,6 +14,7 @@ using Amazon.DynamoDBv2.Model;
 using Newtonsoft.Json;
 using Amazon.Lambda.Core;
 using Amazon.Runtime;
+using System.Linq;
 
 namespace RentAccountApi.V1.Gateways
 {
@@ -52,6 +53,31 @@ namespace RentAccountApi.V1.Gateways
                 LambdaLogger.Log("Error Message:  " + ace.Message);
             }
         }
+
+        public async Task<List<AuditRecord>> GetAuditByUser(string user)
+        {
+            var tableName = _documentsTable.TableName;
+            var queryRequest = new QueryRequest
+            {
+                TableName = tableName,
+                ScanIndexForward = true,
+                KeyConditionExpression = "#User = :value",
+                ExpressionAttributeNames = new Dictionary<string, string> { { "#User", "User" } },
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    {":value", new AttributeValue {S = user}},
+                },
+            };
+            var results = await _databaseClient.QueryAsync(queryRequest);
+            return results.Items.Select(entry => new AuditRecord
+            {
+                User = entry["User"].S?.ToString(),
+                RentAccountNumber = entry["RentAccountNumber"].S?.ToString(),
+                TimeStamp = entry["TimeStamp"].S?.ToString(),
+                CSSOLogin = entry["CSSOLogin"].S?.ToString()
+            }).ToList();
+        }
+
         private static Document ConstructDynamoDocument(MyRentAccountAudit generateAuditRequest)
         {
             return new Document

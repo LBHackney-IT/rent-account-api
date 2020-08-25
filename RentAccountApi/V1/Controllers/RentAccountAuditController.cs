@@ -4,6 +4,9 @@ using RentAccountApi.V1.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
+using RentAccountApi.V1.Boundary.Response;
+using System;
+using System.Threading.Tasks;
 
 namespace RentAccountApi.V1.Controllers
 {
@@ -15,10 +18,12 @@ namespace RentAccountApi.V1.Controllers
     {
 
         private readonly IPostAuditUseCase _postAuditUseCase;
+        private readonly IGetAuditByUserUseCase _getAuditByUserUseCase;
 
-        public RentAccountAuditController(IPostAuditUseCase postAuditUseCase)
+        public RentAccountAuditController(IPostAuditUseCase postAuditUseCase, IGetAuditByUserUseCase getAuditByUserUseCase)
         {
             _postAuditUseCase = postAuditUseCase;
+            _getAuditByUserUseCase = getAuditByUserUseCase;
         }
 
         /// <summary>
@@ -30,7 +35,7 @@ namespace RentAccountApi.V1.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
         [HttpPost]
-        public IActionResult GenerateAuditLog([FromBody] AuditRequestObject auditRequest)
+        public IActionResult GenerateAuditLog([FromBody] CreateAuditRequest auditRequest)
         {
             try
             {
@@ -42,5 +47,27 @@ namespace RentAccountApi.V1.Controllers
                 return StatusCode(500, string.Format("There was a problem inserting the audit data into the database.{0}", ex.Message));
             }
         }
+
+        /// <summary>
+        /// Returns a list of audit entries for a given user email address
+        /// </summary>
+        /// <response code="200">...</response>
+        /// <response code="400">One or more request parameters are invalid or missing</response>
+        [ProducesResponseType(typeof(GetAllAuditsResponse), StatusCodes.Status200OK)]
+
+        [HttpGet]
+        public async Task<IActionResult> GetAuditByUser([FromQuery] string userEmail)
+        {
+            try
+            {
+                var response = await _getAuditByUserUseCase.GetAuditByUser(userEmail);
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "There was a problem inserting the token data into the database.");
+            }
+        }
+
     }
 }
