@@ -4,6 +4,9 @@ using FluentAssertions;
 using NUnit.Framework;
 using RentAccountApi.V1.Boundary.Request;
 using Bogus;
+using RentAccountApi.Tests.V1.Helper;
+using RentAccountApi.V1.Domain;
+using System.Collections.Generic;
 
 namespace RentAccountApi.Tests.V1.Factories
 {
@@ -20,13 +23,7 @@ namespace RentAccountApi.Tests.V1.Factories
         [Test]
         public void CanMapInputToGenerateAuditRequestObject()
         {
-            var auditRequest = new CreateAuditRequest
-            {
-                User = _faker.Person.Email.ToLower(),
-                RentAccountNumber = _faker.Random.Int(5).ToString(),
-                CSSOLogin = _faker.Random.Bool(),
-                AuditAction = _faker.PickRandomParam(new[] { "unlink", "view" })
-            };
+            var auditRequest = TestHelpers.CreateAuditRequestObject(_faker);
 
             var factoryResponse = AuditFactory.ToAuditRequest(auditRequest);
 
@@ -35,6 +32,23 @@ namespace RentAccountApi.Tests.V1.Factories
             factoryResponse.AuditAction.Should().Be(auditRequest.AuditAction);
             factoryResponse.CSSOLogin.Should().Be(auditRequest.CSSOLogin.ToString());
             factoryResponse.TimeStamp.Should().NotBeNullOrEmpty();
+        }
+
+        [Test]
+        public void CanMapAuditRecordsToGetAllAuditsResponseObject()
+        {
+            var auditRecords = new List<AuditRecord>
+            {
+               TestHelpers.CreateAuditRecordObject(_faker),
+               TestHelpers.CreateAuditRecordObject(_faker)
+            };
+
+            var factoryResponse = AuditFactory.ToGetAllAuditsResponse(auditRecords);
+
+            factoryResponse.Should().NotBeNull();
+            factoryResponse.AuditRecords.Count.Should().Equals(auditRecords.Count);
+            factoryResponse.AuditRecords[0].User.Should().Equals(auditRecords[0].User);
+            factoryResponse.AuditRecords[0].CSSOLogin.ToString().Should().Equals(auditRecords[0].CSSOLogin);
         }
     }
 }
