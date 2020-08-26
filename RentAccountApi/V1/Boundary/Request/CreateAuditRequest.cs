@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentAccountApi.V1.Boundary.Request
 {
-    public class AuditRequestObject
+    public class CreateAuditRequest
     {
         /// <example>
         /// john.smith@test.com
@@ -14,5 +14,10 @@ namespace RentAccountApi.V1.Boundary.Request
         /// </example>
         [Required]
         public string RentAccountNumber { get; set; }
+        /// <example>
+        /// true
+        /// </example>
+        [Required]
+        public bool CSSOLogin { get; set; }
     }
 }
