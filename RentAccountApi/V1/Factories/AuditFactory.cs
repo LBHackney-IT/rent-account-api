@@ -21,7 +21,8 @@ namespace RentAccountApi.V1.Factories
                 User = auditRequestObject.User,
                 RentAccountNumber = auditRequestObject.RentAccountNumber,
                 TimeStamp = FormatToUkDate(DateTime.Now).ToString("o"),
-                CSSOLogin = auditRequestObject.CSSOLogin.ToString()
+                CSSOLogin = auditRequestObject.CSSOLogin.ToString(),
+                AuditAction = auditRequestObject.AuditAction.ToString()
             };
         }
 
@@ -32,7 +33,8 @@ namespace RentAccountApi.V1.Factories
                 User = record.User,
                 TimeStamp = record.TimeStamp,
                 RentAccountNumber = record.RentAccountNumber,
-                CSSOLogin = bool.Parse(record.CSSOLogin)
+                CSSOLogin = bool.Parse(record.CSSOLogin),
+                AuditAction = record.AuditAction
 
             }).ToList();
 

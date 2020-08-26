@@ -74,8 +74,9 @@ namespace RentAccountApi.V1.Gateways
                 User = entry["User"].S?.ToString(),
                 RentAccountNumber = entry["RentAccountNumber"].S?.ToString(),
                 TimeStamp = entry["TimeStamp"].S?.ToString(),
-                CSSOLogin = entry["CSSOLogin"].S?.ToString()
-            }).ToList();
+                CSSOLogin = entry["CSSOLogin"].S?.ToString(),
+                AuditAction = entry["AuditAction"].S?.ToString()
+            }).ToList(); //TODO: how do we deal with database entries that have empty columns? i.e. records created prior to a new column being added.
         }
 
         private static Document ConstructDynamoDocument(MyRentAccountAudit generateAuditRequest)
@@ -85,7 +86,8 @@ namespace RentAccountApi.V1.Gateways
                 ["User"] = generateAuditRequest.User,
                 ["TimeStamp"] = generateAuditRequest.TimeStamp,
                 ["RentAccountNumber"] = generateAuditRequest.RentAccountNumber,
-                ["CSSOLogin"] = generateAuditRequest.CSSOLogin
+                ["CSSOLogin"] = generateAuditRequest.CSSOLogin,
+                ["AuditAction"] = generateAuditRequest.AuditAction
             };
         }
     }

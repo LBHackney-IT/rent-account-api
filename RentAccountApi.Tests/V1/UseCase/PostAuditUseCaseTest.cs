@@ -44,7 +44,8 @@ namespace RentAccountApi.Tests.V1.UseCase
             {
                 User = _faker.Random.String(),
                 RentAccountNumber = _faker.Random.String(),
-                CSSOLogin = _faker.Random.Bool()
+                CSSOLogin = _faker.Random.Bool(),
+                AuditAction = _faker.Random.String()
             };
         }
     }
