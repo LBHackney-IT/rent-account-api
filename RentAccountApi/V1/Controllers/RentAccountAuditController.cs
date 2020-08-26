@@ -7,6 +7,7 @@ using System.Net.Mime;
 using RentAccountApi.V1.Boundary.Response;
 using System;
 using System.Threading.Tasks;
+using Amazon.Lambda.Core;
 
 namespace RentAccountApi.V1.Controllers
 {
@@ -44,7 +45,7 @@ namespace RentAccountApi.V1.Controllers
             }
             catch (AuditNotInsertedException ex)
             {
-                return StatusCode(500, string.Format("There was a problem inserting the audit data into the database.{0}", ex.Message));
+                return StatusCode(500, string.Format("There was a problem inserting the audit data into the database. {0}", ex.Message));
             }
         }
 
@@ -54,18 +55,26 @@ namespace RentAccountApi.V1.Controllers
         /// <response code="200">...</response>
         /// <response code="400">One or more request parameters are invalid or missing</response>
         [ProducesResponseType(typeof(GetAllAuditsResponse), StatusCodes.Status200OK)]
-
         [HttpGet]
         public async Task<IActionResult> GetAuditByUser([FromQuery] string userEmail)
         {
             try
             {
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    throw new MissingQueryParameterException("Parameter useremail must be provided.");
+                }
                 var response = await _getAuditByUserUseCase.GetAuditByUser(userEmail);
                 return Ok(response);
             }
-            catch (Exception)
+            catch (MissingQueryParameterException ex)
             {
-                return StatusCode(500, "There was a problem inserting the token data into the database.");
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                LambdaLogger.Log(ex.Message);
+                return StatusCode(500, "There was a problem retrieving the audit data from the database.");
             }
         }
 

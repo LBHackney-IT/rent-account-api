@@ -15,24 +15,26 @@ namespace RentAccountApi.Tests.V1.Factories
         [SetUp]
         public void Setup()
         {
-            _faker = new Faker();
+            _faker = new Faker("en_GB");
         }
         [Test]
         public void CanMapInputToGenerateAuditRequestObject()
         {
             var auditRequest = new CreateAuditRequest
             {
-                User = _faker.Random.String(),
+                User = _faker.Person.Email.ToLower(),
                 RentAccountNumber = _faker.Random.Int(5).ToString(),
-                CSSOLogin = _faker.Random.Bool()
+                CSSOLogin = _faker.Random.Bool(),
+                AuditAction = _faker.PickRandomParam(new[] { "unlink", "view" })
             };
 
             var factoryResponse = AuditFactory.ToAuditRequest(auditRequest);
 
             factoryResponse.User.Should().Be(auditRequest.User);
             factoryResponse.RentAccountNumber.Should().Be(auditRequest.RentAccountNumber);
-            factoryResponse.TimeStamp.Should().NotBeNull();
-            factoryResponse.CSSOLogin.Should().NotBeNull();
+            factoryResponse.AuditAction.Should().Be(auditRequest.AuditAction);
+            factoryResponse.CSSOLogin.Should().Be(auditRequest.CSSOLogin.ToString());
+            factoryResponse.TimeStamp.Should().NotBeNullOrEmpty();
         }
     }
 }
