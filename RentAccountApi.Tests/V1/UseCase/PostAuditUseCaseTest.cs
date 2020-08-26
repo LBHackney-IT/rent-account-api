@@ -1,6 +1,7 @@
 using Bogus;
 using Moq;
 using NUnit.Framework;
+using RentAccountApi.Tests.V1.Helper;
 using RentAccountApi.V1.Boundary;
 using RentAccountApi.V1.Boundary.Request;
 using RentAccountApi.V1.Factories;
@@ -31,22 +32,11 @@ namespace RentAccountApi.Tests.V1.UseCase
         [Test]
         public void UseCaseShouldCallGatewayToInsertAuditData()
         {
-            var auditRequest = GetAuditRequestObject();
+            var auditRequest = TestHelpers.CreateAuditRequestObject(_faker);
             _mockGateway.Setup(x => x.GenerateAuditRecord(AuditFactory.ToAuditRequest(auditRequest)));
-            _classUnderTest.Execute(GetAuditRequestObject());
+            _classUnderTest.Execute(auditRequest);
 
             _mockGateway.Verify(x => x.GenerateAuditRecord(It.IsAny<MyRentAccountAudit>()), Times.Once);
-        }
-
-        private CreateAuditRequest GetAuditRequestObject()
-        {
-            return new CreateAuditRequest
-            {
-                User = _faker.Random.String(),
-                RentAccountNumber = _faker.Random.String(),
-                CSSOLogin = _faker.Random.Bool(),
-                AuditAction = _faker.Random.String()
-            };
         }
     }
 }
