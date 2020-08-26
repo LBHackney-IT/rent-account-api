@@ -8,7 +8,7 @@ namespace RentAccountApi.V1.Domain
     public class MissingQueryParameterException : Exception
     {
         public MissingQueryParameterException(string message)
-            :base(message)
+            : base(message)
         { }
     }
 }
