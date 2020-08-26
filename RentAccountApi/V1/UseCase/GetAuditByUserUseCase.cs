@@ -23,7 +23,7 @@ namespace RentAccountApi.V1.UseCase
 
         public async Task<GetAllAuditsResponse> GetAuditByUser(string userEmail)
         {
-            var auditRecords = await _gateway.GetAuditByUser(userEmail);
+            var auditRecords = await _gateway.GetAuditByUser(userEmail.ToLower());
             //TODO: check querstring values are correct
             return AuditFactory.ToGetAllAuditsResponse(auditRecords);
         }

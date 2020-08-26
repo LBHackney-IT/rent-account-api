@@ -11,5 +11,6 @@ namespace RentAccountApi.V1.Domain
         public string RentAccountNumber { get; set; }
         public string TimeStamp { get; set; }
         public string CSSOLogin { get; set; }
+        public string AuditAction { get; set; }
     }
 }

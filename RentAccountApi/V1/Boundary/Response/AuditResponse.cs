@@ -21,5 +21,9 @@ namespace RentAccountApi.V1.Boundary.Response
         /// true
         /// </example>
         public bool CSSOLogin { get; set; }
+        /// <example>
+        /// view
+        /// </example>
+        public string AuditAction { get; set; }
     }
 }

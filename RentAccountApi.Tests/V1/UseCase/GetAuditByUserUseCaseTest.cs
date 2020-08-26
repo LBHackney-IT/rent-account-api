@@ -3,6 +3,7 @@ using Bogus;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using RentAccountApi.Tests.V1.Helper;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using RentAccountApi.V1.Factories;
@@ -31,25 +32,13 @@ namespace RentAccountApi.Tests.V1.UseCase
         }
 
         [Test]
-        public void ReturnsResidentInformationList()
+        public void ReturnsAuditList()
         {
             var stubbedAudits =
                 new List<AuditRecord>
                 {
-                    new AuditRecord
-                    {
-                        User = _faker.Random.String(),
-                        TimeStamp = _faker.Random.String(),
-                        RentAccountNumber = _faker.Random.String(),
-                        CSSOLogin = _faker.Random.Bool().ToString()
-                    },
-                    new AuditRecord
-                    {
-                        User = _faker.Random.String(),
-                        TimeStamp = _faker.Random.String(),
-                        RentAccountNumber = _faker.Random.String(),
-                        CSSOLogin = _faker.Random.Bool().ToString()
-                    }
+                    TestHelpers.CreateAuditRecordObject(_faker),
+                    TestHelpers.CreateAuditRecordObject(_faker)
                 };
 
             _mockAuditGateway.Setup(x => x.GetAuditByUser("matt@matt.com")).ReturnsAsync(stubbedAudits);
@@ -59,7 +48,5 @@ namespace RentAccountApi.Tests.V1.UseCase
             response.Should().NotBeNull();
             response.Result.Should().BeEquivalentTo(AuditFactory.ToGetAllAuditsResponse(stubbedAudits));
         }
-
-
     }
 }
