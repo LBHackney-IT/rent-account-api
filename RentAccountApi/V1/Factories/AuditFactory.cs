@@ -18,11 +18,11 @@ namespace RentAccountApi.V1.Factories
 
             return new MyRentAccountAudit
             {
-                User = auditRequestObject.User,
+                User = auditRequestObject.User.ToLower(),
                 RentAccountNumber = auditRequestObject.RentAccountNumber,
                 TimeStamp = FormatToUkDate(DateTime.Now).ToString("o"),
                 CSSOLogin = auditRequestObject.CSSOLogin.ToString(),
-                AuditAction = auditRequestObject.AuditAction.ToString()
+                AuditAction = auditRequestObject.AuditAction.ToString().ToLower()
             };
         }
 
