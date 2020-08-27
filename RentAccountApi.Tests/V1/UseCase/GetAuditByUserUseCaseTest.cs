@@ -41,7 +41,7 @@ namespace RentAccountApi.Tests.V1.UseCase
                     TestHelpers.CreateAuditRecordObject(_faker)
                 };
 
-            _mockAuditGateway.Setup(x => x.GetAuditByUser("matt@matt.com")).ReturnsAsync(stubbedAudits);
+            _mockAuditGateway.Setup(x => x.GetAuditByUser("matt@matt.com", 20)).ReturnsAsync(stubbedAudits);
 
             var response = _classUnderTest.GetAuditByUser("matt@matt.com");
 
