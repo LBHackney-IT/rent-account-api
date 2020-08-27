@@ -22,8 +22,11 @@ namespace RentAccountApi.V1.UseCase
         }
 
         public async Task<GetAllAuditsResponse> GetAuditByUser(string userEmail)
-        {
-            var auditRecords = await _gateway.GetAuditByUser(userEmail.ToLower());
+        {            
+            var envRecordLimit = Environment.GetEnvironmentVariable("AUDIT_RECORD_LIMIT");
+            int recordLimit = envRecordLimit != null ? int.Parse(envRecordLimit) : 20;
+            
+            var auditRecords = await _gateway.GetAuditByUser(userEmail.ToLower(), recordLimit);
             //TODO: check querstring values are correct
             return AuditFactory.ToGetAllAuditsResponse(auditRecords);
         }
