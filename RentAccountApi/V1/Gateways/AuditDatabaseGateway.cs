@@ -54,13 +54,14 @@ namespace RentAccountApi.V1.Gateways
             }
         }
 
-        public async Task<List<AuditRecord>> GetAuditByUser(string user)
+        public async Task<List<AuditRecord>> GetAuditByUser(string user, int recordLimit)
         {
             var tableName = _documentsTable.TableName;
             var queryRequest = new QueryRequest
             {
                 TableName = tableName,
-                ScanIndexForward = true,
+                Limit = recordLimit,
+                ScanIndexForward = false,
                 KeyConditionExpression = "#User = :value",
                 ExpressionAttributeNames = new Dictionary<string, string> { { "#User", "User" } },
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
