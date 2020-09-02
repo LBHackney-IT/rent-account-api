@@ -13,16 +13,19 @@ namespace RentAccountApi.V1.UseCase
     public class CheckRentAccountExistsUseCase : ICheckRentAccountExistsUseCase
     {
         private readonly ICRMGateway _crmGateway;
+        private readonly ICRMTokenGateway _crmTokenGateway;
 
-        public CheckRentAccountExistsUseCase(ICRMGateway crmGateway)
+        public CheckRentAccountExistsUseCase(ICRMGateway crmGateway, ICRMTokenGateway crmTokenGateway)
         {
             _crmGateway = crmGateway;
+            _crmTokenGateway = crmTokenGateway;
         }
 
         public async Task<CheckAccountExistsResponse> Execute(string paymentReference, string postCode)
         {
             var normalizedPostcode = CRMFactory.NormalizePostcode(postCode);
-            var accountExistsResponse =  await _crmGateway.CheckAccountExists(paymentReference, normalizedPostcode);
+            var token = await _crmTokenGateway.GetCRMToken();
+            var accountExistsResponse =  await _crmGateway.CheckAccountExists(paymentReference, normalizedPostcode, token);
             return accountExistsResponse;
         }
     }

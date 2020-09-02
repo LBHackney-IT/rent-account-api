@@ -20,6 +20,7 @@ namespace RentAccountApi.Tests.V1.UseCase
     public class CheckRentAccountExistsUseCaseTest
     {
         private Mock<ICRMGateway> _mockCrmGateway;
+        private Mock<ICRMTokenGateway> _mockCrmTokenGateway;
         private CheckRentAccountExistsUseCase _classUnderTest;
         private Faker _faker;
 
@@ -27,7 +28,8 @@ namespace RentAccountApi.Tests.V1.UseCase
         public void SetUp()
         {
             _mockCrmGateway = new Mock<ICRMGateway>();
-            _classUnderTest = new CheckRentAccountExistsUseCase(_mockCrmGateway.Object);
+            _mockCrmTokenGateway = new Mock<ICRMTokenGateway>();
+            _classUnderTest = new CheckRentAccountExistsUseCase(_mockCrmGateway.Object, _mockCrmTokenGateway.Object);
             _faker = new Faker();
         }
 
@@ -36,13 +38,14 @@ namespace RentAccountApi.Tests.V1.UseCase
         {
             var paymentReference = "1234567";
             var postCode = "E8 1DY";
+            var token = "token";
             var checkAccountExistsResponse =
                 new CheckAccountExistsResponse
                 {
                     Exists = true
                 };
 
-            _mockCrmGateway.Setup(x => x.CheckAccountExists(paymentReference, postCode)).ReturnsAsync(checkAccountExistsResponse);
+            _mockCrmGateway.Setup(x => x.CheckAccountExists(paymentReference, postCode, token)).ReturnsAsync(checkAccountExistsResponse);
 
             var response = _classUnderTest.Execute(paymentReference,postCode);
 
@@ -55,13 +58,14 @@ namespace RentAccountApi.Tests.V1.UseCase
         {
             var paymentReference = "1234567";
             var postCode = "E8 1DY";
+            var token = "token";
             var checkAccountExistsResponse =
                 new CheckAccountExistsResponse
                 {
                     Exists = false
                 };
 
-            _mockCrmGateway.Setup(x => x.CheckAccountExists(paymentReference, postCode)).ReturnsAsync(checkAccountExistsResponse);
+            _mockCrmGateway.Setup(x => x.CheckAccountExists(paymentReference, postCode, token)).ReturnsAsync(checkAccountExistsResponse);
 
             var response = _classUnderTest.Execute(paymentReference, postCode);
 

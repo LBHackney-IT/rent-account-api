@@ -8,6 +8,6 @@ namespace RentAccountApi.V1.Gateways
 {
     public interface ICRMGateway
     {
-        Task<CheckAccountExistsResponse> CheckAccountExists(string paymentReference, string postcode);
+        Task<CheckAccountExistsResponse> CheckAccountExists(string paymentReference, string postcode, string token);
     }
 }
