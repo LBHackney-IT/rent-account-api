@@ -144,12 +144,19 @@ namespace RentAccountApi
         {
             //var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
             services.AddScoped<IAuditDatabaseGateway, AuditDatabaseGateway>();
+            var crmUrl = Environment.GetEnvironmentVariable("CRM_API_ENDPOINT");
+
+            services.AddHttpClient<ICRMGateway, CRMGateway>(a =>
+            {
+                a.BaseAddress = new Uri(crmUrl);
+            });
         }
 
         private static void RegisterUseCases(IServiceCollection services)
         {
             services.AddScoped<IPostAuditUseCase, PostAuditUseCase>();
             services.AddScoped<IGetAuditByUserUseCase, GetAuditByUserUseCase>();
+            services.AddScoped<ICheckRentAccountExistsUseCase, CheckRentAccountExistsUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
