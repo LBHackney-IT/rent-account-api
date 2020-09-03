@@ -13,7 +13,7 @@ namespace RentAccountApi.Tests.V1.Factories
         [SetUp]
         public void Setup()
         {
-            
+
         }
 
         [Test]

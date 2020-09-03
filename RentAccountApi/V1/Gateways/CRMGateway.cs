@@ -27,12 +27,12 @@ namespace RentAccountApi.V1.Gateways
                 Query = fetchXML
             };
             _client.DefaultRequestHeaders.Add("Authorization", token);
-            
+
             var response = await _client.GetAsync(new Uri("accounts" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var results = JsonConvert.DeserializeObject<CrmResponse>(content);
 
-            if(results.value.Count > 0)
+            if (results.value.Count > 0)
             {
                 return new CheckAccountExistsResponse
                 {

@@ -47,7 +47,7 @@ namespace RentAccountApi.Tests.V1.UseCase
 
             _mockCrmGateway.Setup(x => x.CheckAccountExists(paymentReference, postCode, token)).ReturnsAsync(checkAccountExistsResponse);
 
-            var response = _classUnderTest.Execute(paymentReference,postCode);
+            var response = _classUnderTest.Execute(paymentReference, postCode);
 
             response.Should().NotBeNull();
             response.Result.Should().BeEquivalentTo(checkAccountExistsResponse);

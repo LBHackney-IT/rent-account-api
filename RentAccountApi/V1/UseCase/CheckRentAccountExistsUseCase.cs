@@ -25,7 +25,7 @@ namespace RentAccountApi.V1.UseCase
         {
             var normalizedPostcode = CRMFactory.NormalizePostcode(postCode);
             var token = await _crmTokenGateway.GetCRMToken();
-            var accountExistsResponse =  await _crmGateway.CheckAccountExists(paymentReference, normalizedPostcode, token);
+            var accountExistsResponse = await _crmGateway.CheckAccountExists(paymentReference, normalizedPostcode, token);
             return accountExistsResponse;
         }
     }

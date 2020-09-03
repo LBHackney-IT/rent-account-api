@@ -32,7 +32,7 @@ namespace RentAccountApi.V1.Gateways.Helpers
 
             if (!string.IsNullOrEmpty(fetchXML)) queryDictionary.Add("fetchXml", fetchXML);
             var rqpString = new FormUrlEncodedContent(queryDictionary).ReadAsStringAsync().Result;
-            return rqpString; 
+            return rqpString;
         }
     }
 }
