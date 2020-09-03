@@ -11,6 +11,8 @@ using Moq;
 using NUnit.Framework;
 using RentAccountApi.V1.Controllers;
 using RentAccountApi.V1.Boundary.Response;
+using Bogus;
+using RentAccountApi.Tests.V1.Helper;
 
 namespace RentAccountApi.Tests.V1.Controllers
 {
@@ -18,15 +20,48 @@ namespace RentAccountApi.Tests.V1.Controllers
     {
         private RentAccountCRMController _classUnderTest;
         private Mock<ICheckRentAccountExistsUseCase> _checkRentAccountExistsUseCase;
+        private Mock<IGetRentAccountUseCase> _getRentAccountUseCase;
+        private Faker _faker;
 
         [SetUp]
         public void Setup()
         {
             _checkRentAccountExistsUseCase = new Mock<ICheckRentAccountExistsUseCase>();
-            _classUnderTest = new RentAccountCRMController(_checkRentAccountExistsUseCase.Object);
+            _getRentAccountUseCase = new Mock<IGetRentAccountUseCase>();
+            _classUnderTest = new RentAccountCRMController(_checkRentAccountExistsUseCase.Object, _getRentAccountUseCase.Object);
+            _faker = new Faker();
         }
 
         #region GET tests
+        [Test]
+        public async Task GetRentAccountAnd200()
+        {
+            var rentAccountResponse = TestHelpers.CreateRentAccountResponseObject(_faker);
+            var paymentReference = "1234567";
+            var privacy = true;
+
+            _getRentAccountUseCase.Setup(x => x.Execute(paymentReference, privacy)).ReturnsAsync(rentAccountResponse);
+            var response = (await _classUnderTest.GetRentAccount(paymentReference, privacy).ConfigureAwait(true) as IActionResult) as OkObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            response.Value.Should().BeEquivalentTo(rentAccountResponse);
+        }
+
+        [Test]
+        public async Task GetRentAccountWithInvalidRefReturns404()
+        {
+            var rentAccountResponse = new RentAccountResponse();
+            rentAccountResponse = null;
+            var paymentReference = "1234567";
+            var privacy = true;
+
+            _getRentAccountUseCase.Setup(x => x.Execute(paymentReference, privacy)).ReturnsAsync(rentAccountResponse);
+            var response = (await _classUnderTest.GetRentAccount(paymentReference, privacy).ConfigureAwait(true) as IActionResult) as ObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(404);
+            response.Value.Should().Be("Account not found");
+        }
+
         [Test]
         public async Task CheckAccountExistsReturnsTrueAnd200()
         {
