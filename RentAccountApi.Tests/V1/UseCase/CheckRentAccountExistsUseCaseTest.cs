@@ -45,6 +45,7 @@ namespace RentAccountApi.Tests.V1.UseCase
                     Exists = true
                 };
 
+            _mockCrmTokenGateway.Setup(x => x.GetCRMToken()).ReturnsAsync("token");
             _mockCrmGateway.Setup(x => x.CheckAccountExists(paymentReference, postCode, token)).ReturnsAsync(checkAccountExistsResponse);
 
             var response = _classUnderTest.Execute(paymentReference, postCode);
@@ -65,6 +66,7 @@ namespace RentAccountApi.Tests.V1.UseCase
                     Exists = false
                 };
 
+            _mockCrmTokenGateway.Setup(x => x.GetCRMToken()).ReturnsAsync("token");
             _mockCrmGateway.Setup(x => x.CheckAccountExists(paymentReference, postCode, token)).ReturnsAsync(checkAccountExistsResponse);
 
             var response = _classUnderTest.Execute(paymentReference, postCode);
