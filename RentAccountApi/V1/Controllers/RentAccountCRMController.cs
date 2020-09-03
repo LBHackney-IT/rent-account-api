@@ -28,8 +28,8 @@ namespace RentAccountApi.V1.Controllers
         /// <summary>
         /// Checks a rent account exists
         /// </summary>
-        /// <response code="200">Rent account exists</response>
-        /// <response code="404">Rent account does not exist</response>
+        /// <response code="200">Rent account and payment reference matches</response>
+        /// <response code="404">Rent account and payment reference does not match</response>
         /// <response code="500">There was a problem retrieving the rent account</response>
         [HttpGet]
         [Consumes(MediaTypeNames.Application.Json)]
