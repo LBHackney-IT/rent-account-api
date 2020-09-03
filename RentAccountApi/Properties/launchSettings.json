@@ -16,7 +16,10 @@
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "TABLE_NAME": "MyRentAccountAudit"
+        "TABLE_NAME": "MRAAuditTable-development",
+        "ENV": "local",
+        "AUDIT_RECORD_LIMIT": "5",
+        "CRM_API_ENDPOINT": "https://lbhackney.crm11.dynamics.com/api/data/v8.2/"
       }
     }
   }
