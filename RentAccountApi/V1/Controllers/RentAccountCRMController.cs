@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Amazon.Lambda.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RentAccountApi.V1.Boundary.Request;
@@ -12,7 +13,7 @@ using RentAccountApi.V1.UseCase.Interfaces;
 
 namespace RentAccountApi.V1.Controllers
 {
-    [Route("api/v1/rentaccount")]
+    [Route("api/v1/rentaccounts")]
     [ApiController]
     [Produces("application/json")]
     [ApiVersion("1.0")]
@@ -34,7 +35,7 @@ namespace RentAccountApi.V1.Controllers
         [HttpGet]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(CheckAccountExistsResponse), StatusCodes.Status200OK)]
-        [Route("/paymentref/{paymentReference}/postcode/{postcode}")]
+        [Route("api/v1/checkrentaccount/paymentref/{paymentReference}/postcode/{postcode}")]
         public async Task<IActionResult> CheckRentAccountExists(string paymentReference, string postcode)
         {
             try
@@ -51,7 +52,13 @@ namespace RentAccountApi.V1.Controllers
             }
             catch (MissingQueryParameterException e)
             {
+                LambdaLogger.Log(e.Message);
                 return BadRequest(e.Message);
+            }
+            catch(Exception ex)
+            {
+                LambdaLogger.Log(ex.Message);
+                return StatusCode(500, "An error has occured");
             }
         }
 
