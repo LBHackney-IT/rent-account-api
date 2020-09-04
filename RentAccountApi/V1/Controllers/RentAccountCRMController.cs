@@ -22,12 +22,14 @@ namespace RentAccountApi.V1.Controllers
         private readonly ICheckRentAccountExistsUseCase _checkRentAccountExistsUseCase;
         private readonly IGetRentAccountUseCase _getRentAccountUseCase;
         private readonly IGetLinkedAccountUseCase _getLinkedAccountUseCase;
+        private readonly IDeleteLinkedAccountUseCase _deleteLinkedAccountUseCase;
 
-        public RentAccountCRMController(ICheckRentAccountExistsUseCase checkRentAccountExistsUseCase, IGetRentAccountUseCase getRentAccountUseCase, IGetLinkedAccountUseCase getLinkedAccountUseCase)
+        public RentAccountCRMController(ICheckRentAccountExistsUseCase checkRentAccountExistsUseCase, IGetRentAccountUseCase getRentAccountUseCase, IGetLinkedAccountUseCase getLinkedAccountUseCase, IDeleteLinkedAccountUseCase deleteLinkedAccountUseCase)
         {
             _checkRentAccountExistsUseCase = checkRentAccountExistsUseCase;
             _getRentAccountUseCase = getRentAccountUseCase;
             _getLinkedAccountUseCase = getLinkedAccountUseCase;
+            _deleteLinkedAccountUseCase = deleteLinkedAccountUseCase;
         }
 
         /// <summary>
@@ -81,7 +83,7 @@ namespace RentAccountApi.V1.Controllers
             try
             {
                 var response = await _getRentAccountUseCase.Execute(paymentReference, privacy);
-                if (response != null)//check this
+                if (response != null)
                 {
                     return Ok(response);
                 }
@@ -117,9 +119,45 @@ namespace RentAccountApi.V1.Controllers
             try
             {
                 var response = await _getLinkedAccountUseCase.Execute(cssoId);
-                if (response != null)//check this
+                if (response != null)
                 {
                     return Ok(response);
+                }
+                else
+                {
+                    return StatusCode(404, "Linked account not found");
+                }
+            }
+            catch (MissingQueryParameterException e)
+            {
+                LambdaLogger.Log(e.Message);
+                return BadRequest(e.Message);
+            }
+            catch (Exception ex)
+            {
+                LambdaLogger.Log(ex.Message);
+                return StatusCode(500, "An error has occured");
+            }
+        }
+
+
+        /// <summary>
+        /// Retrieves linked account
+        /// </summary>
+        /// <response code="204">Linked account deleted</response>
+        /// <response code="404">Linked account does not exist</response>
+        /// <response code="500">There was a problem deleting the linked account</response>
+        [HttpDelete]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
+        [Route("linkedaccount/{cssoId}")]
+        public async Task<IActionResult> UnlinkAccount(string cssoId)
+        {
+            try
+            {
+                var response = await _deleteLinkedAccountUseCase.Execute(cssoId);
+                if (response != null && response.success)
+                {
+                    return NoContent();
                 }
                 else
                 {

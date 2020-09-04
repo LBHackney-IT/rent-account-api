@@ -77,5 +77,13 @@ namespace RentAccountApi.V1.Gateways
             var result = JsonConvert.DeserializeObject<CrmLinkedAccountResponse>(content);
             return result;
         }
+
+        public async Task<bool> DeleteLinkedAccount(string linkId)
+        {
+            var response = await _client.DeleteAsync(new Uri($"hackney_csso_linked_rent_accounts({linkId})", UriKind.Relative)).ConfigureAwait(true);
+            var status = (int) response.StatusCode;
+            return status == 204 ? true : false;
+        }
+
     }
 }

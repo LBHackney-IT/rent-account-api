@@ -26,6 +26,7 @@ using RentAccountApi.V1.Boundary;
 using System.Globalization;
 using Amazon.Runtime.Internal.Util;
 using Gateways;
+using Amazon.DynamoDBv2.Model;
 
 namespace RentAccountApi
 {
@@ -168,6 +169,7 @@ namespace RentAccountApi
             services.AddScoped<ICheckRentAccountExistsUseCase, CheckRentAccountExistsUseCase>();
             services.AddScoped<IGetRentAccountUseCase, GetRentAccountUseCase>();
             services.AddScoped<IGetLinkedAccountUseCase, GetLinkedAccountUseCase>();
+            services.AddScoped<IDeleteLinkedAccountUseCase, DeleteLinkedAccountUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
