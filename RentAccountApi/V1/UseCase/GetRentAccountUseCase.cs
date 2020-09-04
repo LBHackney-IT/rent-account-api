@@ -25,7 +25,7 @@ namespace RentAccountApi.V1.UseCase
         {
             var token = await _crmTokenGateway.GetCRMToken();
             var crmResponse = await _crmGateway.GetRentAccount(paymentReference, token);
-            var rentAccountResponse = CRMFactory.ToResponse(paymentReference, crmResponse, privacy);
+            var rentAccountResponse = crmResponse.value.Count > 0 ? CRMFactory.ToResponse(paymentReference, crmResponse, privacy) : null;
             return rentAccountResponse;
         }
     }
