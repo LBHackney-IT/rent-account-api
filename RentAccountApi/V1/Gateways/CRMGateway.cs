@@ -21,7 +21,7 @@ namespace RentAccountApi.V1.Gateways
 
         public async Task<CheckAccountExistsResponse> CheckAccountExists(string paymentReference, string postcode, string token)
         {
-            var fetchXML = FetchXMLBuilder.BuildGetTenancyRefFetchXML(paymentReference, postcode);
+            var fetchXML = FetchXMLBuilder.BuildCheckAccountExistsFetchXML(paymentReference, postcode);
             var builder = new UriBuilder()
             {
                 Query = fetchXML
@@ -46,6 +46,21 @@ namespace RentAccountApi.V1.Gateways
                     Exists = false
                 };
             }
+        }
+
+        public async Task<CrmRentAccountResponse> GetRentAccount(string paymentReference, string token)
+        {
+            var fetchXML = FetchXMLBuilder.BuildGetRentAccountFetchXML(paymentReference);
+            var builder = new UriBuilder()
+            {
+                Query = fetchXML
+            };
+            _client.DefaultRequestHeaders.Add("Authorization", token);
+
+            var response = await _client.GetAsync(new Uri("accounts" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<CrmRentAccountResponse>(content);
+            return result;
         }
     }
 }
