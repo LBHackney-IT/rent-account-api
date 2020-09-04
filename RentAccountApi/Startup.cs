@@ -167,6 +167,7 @@ namespace RentAccountApi
             services.AddScoped<IGetAuditByUserUseCase, GetAuditByUserUseCase>();
             services.AddScoped<ICheckRentAccountExistsUseCase, CheckRentAccountExistsUseCase>();
             services.AddScoped<IGetRentAccountUseCase, GetRentAccountUseCase>();
+            services.AddScoped<IGetLinkedAccountUseCase, GetLinkedAccountUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

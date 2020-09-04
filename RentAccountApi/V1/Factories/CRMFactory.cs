@@ -20,7 +20,17 @@ namespace RentAccountApi.V1.Factories
             return $"{firstPart} {secondPart}";
         }
 
-        public static RentAccountResponse ToResponse(string paymentReference, CrmRentAccountResponse crmResponse, bool privacy)
+        public static LinkedAccountResponse ToLinkedAccountResponse(CrmLinkedAccountResponse crmLinkedAccountResponse)
+        {
+            return new LinkedAccountResponse
+            {
+                AccountNumber = crmLinkedAccountResponse.value[0].rent_account_number,
+                CSSOId = crmLinkedAccountResponse.value[0].csso_id,
+                LinkedAccountId = crmLinkedAccountResponse.value[0].hackney_csso_linked_rent_accountid
+            };
+        }
+
+        public static RentAccountResponse ToRentAccountResponse(string paymentReference, CrmRentAccountResponse crmResponse, bool privacy)
         {
             var firstname = privacy ? PrivacyFormatting.GetPrivacyString(crmResponse.value[0].contact1_x002e_firstname) : crmResponse.value[0].contact1_x002e_firstname;
             var lastname = privacy ? PrivacyFormatting.GetPrivacyString(crmResponse.value[0].contact1_x002e_lastname) : crmResponse.value[0].contact1_x002e_lastname;

@@ -11,5 +11,6 @@ namespace RentAccountApi.V1.Gateways
     {
         Task<CheckAccountExistsResponse> CheckAccountExists(string paymentReference, string postcode, string token);
         Task<CrmRentAccountResponse> GetRentAccount(string paymentReference, string token);
+        Task<CrmLinkedAccountResponse> GetLinkedAccount(string cssoId, string token);
     }
 }

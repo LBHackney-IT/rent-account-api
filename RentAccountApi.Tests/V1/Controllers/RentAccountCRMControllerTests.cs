@@ -21,6 +21,7 @@ namespace RentAccountApi.Tests.V1.Controllers
         private RentAccountCRMController _classUnderTest;
         private Mock<ICheckRentAccountExistsUseCase> _checkRentAccountExistsUseCase;
         private Mock<IGetRentAccountUseCase> _getRentAccountUseCase;
+        private Mock<IGetLinkedAccountUseCase> _getLinkedAccountUseCase;
         private Faker _faker;
 
         [SetUp]
@@ -28,7 +29,8 @@ namespace RentAccountApi.Tests.V1.Controllers
         {
             _checkRentAccountExistsUseCase = new Mock<ICheckRentAccountExistsUseCase>();
             _getRentAccountUseCase = new Mock<IGetRentAccountUseCase>();
-            _classUnderTest = new RentAccountCRMController(_checkRentAccountExistsUseCase.Object, _getRentAccountUseCase.Object);
+            _getLinkedAccountUseCase = new Mock<IGetLinkedAccountUseCase>();
+            _classUnderTest = new RentAccountCRMController(_checkRentAccountExistsUseCase.Object, _getRentAccountUseCase.Object, _getLinkedAccountUseCase.Object);
             _faker = new Faker();
         }
 
@@ -98,6 +100,38 @@ namespace RentAccountApi.Tests.V1.Controllers
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(404);
             response.Value.Should().Be("Account not found");
+        }
+
+        [Test]
+        public async Task GetLinkedAccountAnd200()
+        {
+            var linkedAccountResponse = new LinkedAccountResponse
+            {
+                AccountNumber = "123",
+                CSSOId = "456",
+                LinkedAccountId = "789"
+            };
+            var cssoId = "456";
+
+            _getLinkedAccountUseCase.Setup(x => x.Execute(cssoId)).ReturnsAsync(linkedAccountResponse);
+            var response = (await _classUnderTest.GetLinkedAccount(cssoId).ConfigureAwait(true) as IActionResult) as OkObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            response.Value.Should().BeEquivalentTo(linkedAccountResponse);
+        }
+
+        [Test]
+        public async Task GetLinkedAccountWithInvalidRefReturns404()
+        {
+            var linkedAccountResponse = new LinkedAccountResponse();
+            linkedAccountResponse = null;
+            var cssoId = "456";
+
+            _getLinkedAccountUseCase.Setup(x => x.Execute(cssoId)).ReturnsAsync(linkedAccountResponse);
+            var response = (await _classUnderTest.GetLinkedAccount(cssoId).ConfigureAwait(true) as IActionResult) as ObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(404);
+            response.Value.Should().Be("Linked account not found");
         }
 
         #endregion

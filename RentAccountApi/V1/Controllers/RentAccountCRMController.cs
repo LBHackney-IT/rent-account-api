@@ -21,11 +21,13 @@ namespace RentAccountApi.V1.Controllers
     {
         private readonly ICheckRentAccountExistsUseCase _checkRentAccountExistsUseCase;
         private readonly IGetRentAccountUseCase _getRentAccountUseCase;
+        private readonly IGetLinkedAccountUseCase _getLinkedAccountUseCase;
 
-        public RentAccountCRMController(ICheckRentAccountExistsUseCase checkRentAccountExistsUseCase, IGetRentAccountUseCase getRentAccountUseCase)
+        public RentAccountCRMController(ICheckRentAccountExistsUseCase checkRentAccountExistsUseCase, IGetRentAccountUseCase getRentAccountUseCase, IGetLinkedAccountUseCase getLinkedAccountUseCase)
         {
             _checkRentAccountExistsUseCase = checkRentAccountExistsUseCase;
             _getRentAccountUseCase = getRentAccountUseCase;
+            _getLinkedAccountUseCase = getLinkedAccountUseCase;
         }
 
         /// <summary>
@@ -86,6 +88,42 @@ namespace RentAccountApi.V1.Controllers
                 else
                 {
                     return StatusCode(404, "Account not found");
+                }
+            }
+            catch (MissingQueryParameterException e)
+            {
+                LambdaLogger.Log(e.Message);
+                return BadRequest(e.Message);
+            }
+            catch (Exception ex)
+            {
+                LambdaLogger.Log(ex.Message);
+                return StatusCode(500, "An error has occured");
+            }
+        }
+
+        /// <summary>
+        /// Retrieves linked account
+        /// </summary>
+        /// <response code="200">Linked account returned</response>
+        /// <response code="404">Linked account does not exist</response>
+        /// <response code="500">There was a problem retrieving the linked account</response>
+        [HttpGet]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(LinkedAccountResponse), StatusCodes.Status200OK)]
+        [Route("linkedaccount/{cssoId}")]
+        public async Task<IActionResult> GetLinkedAccount(string cssoId)
+        {
+            try
+            {
+                var response = await _getLinkedAccountUseCase.Execute(cssoId);
+                if (response != null)//check this
+                {
+                    return Ok(response);
+                }
+                else
+                {
+                    return StatusCode(404, "Linked account not found");
                 }
             }
             catch (MissingQueryParameterException e)

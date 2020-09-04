@@ -62,5 +62,20 @@ namespace RentAccountApi.V1.Gateways
             var result = JsonConvert.DeserializeObject<CrmRentAccountResponse>(content);
             return result;
         }
+
+        public async Task<CrmLinkedAccountResponse> GetLinkedAccount(string cssoId, string token)
+        {
+            var fetchXML = FetchXMLBuilder.BuildGetLinkedAccountFetchXML(cssoId);
+            var builder = new UriBuilder()
+            {
+                Query = fetchXML
+            };
+            _client.DefaultRequestHeaders.Add("Authorization", token);
+
+            var response = await _client.GetAsync(new Uri("hackney_csso_linked_rent_accounts" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var result = JsonConvert.DeserializeObject<CrmLinkedAccountResponse>(content);
+            return result;
+        }
     }
 }

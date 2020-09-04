@@ -27,12 +27,7 @@ namespace RentAccountApi.V1.Gateways.Helpers
                     </link-entity>
              </entity>
             </fetch>";
-
-            var queryDictionary = new Dictionary<string, string>();
-
-            if (!string.IsNullOrEmpty(fetchXML)) queryDictionary.Add("fetchXml", fetchXML);
-            var rqpString = new FormUrlEncodedContent(queryDictionary).ReadAsStringAsync().Result;
-            return rqpString;
+            return BuildDictionaryString(fetchXML);
         }
 
         public static string BuildGetRentAccountFetchXML(string paymentReference)
@@ -64,7 +59,28 @@ namespace RentAccountApi.V1.Gateways.Helpers
                                     </link-entity>
                                 </entity>
                             </fetch>";
+            return BuildDictionaryString(fetchXML);
+        }
 
+        public static string BuildGetLinkedAccountFetchXML(string cssoId)
+        {
+            var fetchXML = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true'>
+            <entity name='hackney_csso_linked_rent_account'>
+              <attribute name='hackney_csso_linked_rent_accountid' />
+              <attribute name='hackney_csso_id' alias='csso_id' />
+              <filter type='and'>
+                <condition attribute='hackney_csso_id' operator='eq' value='{cssoId}'/>
+              </filter>
+              <link-entity name='account' to='hackney_account_id' from='accountid' link-type='inner'>
+                <attribute name='housing_u_saff_rentacc' alias='rent_account_number' />
+              </link-entity>
+            </entity>
+          </fetch>";
+            return BuildDictionaryString(fetchXML);
+        }
+
+        private static string BuildDictionaryString(string fetchXML)
+        {
             var queryDictionary = new Dictionary<string, string>();
 
             if (!string.IsNullOrEmpty(fetchXML)) queryDictionary.Add("fetchXml", fetchXML);
