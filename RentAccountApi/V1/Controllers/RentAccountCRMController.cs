@@ -37,7 +37,7 @@ namespace RentAccountApi.V1.Controllers
         [HttpGet]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(CheckAccountExistsResponse), StatusCodes.Status200OK)]
-        [Route("api/v1/checkrentaccount/paymentref/{paymentReference}/postcode/{postcode}")]
+        [Route("checkrentaccount/paymentref/{paymentReference}/postcode/{postcode}")]
         public async Task<IActionResult> CheckRentAccountExists(string paymentReference, string postcode)
         {
             try
@@ -73,7 +73,7 @@ namespace RentAccountApi.V1.Controllers
         [HttpGet]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(RentAccountResponse), StatusCodes.Status200OK)]
-        [Route("api/v1/rentaccounts/paymentref/{paymentReference}/privacy/{privacy}")]
+        [Route("paymentref/{paymentReference}/privacy/{privacy}")]
         public async Task<IActionResult> GetRentAccount(string paymentReference, bool privacy)
         {
             try
