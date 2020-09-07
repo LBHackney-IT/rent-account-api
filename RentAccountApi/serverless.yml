@@ -104,7 +104,7 @@ resources:
       Type: AWS::DynamoDB::Table
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:provider.environment.TABLE_NAME}
+        TableName: ${self:provider.environment.AUDIT_TABLE_NAME}
         AttributeDefinitions:
           - AttributeName: User
             AttributeType: S
