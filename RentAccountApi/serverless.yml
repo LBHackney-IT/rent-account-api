@@ -14,7 +14,7 @@ provider:
           burstLimit: 200
           rateLimit: 100
   environment:
-    TABLE_NAME: MRAAuditTable-${self:provider.stage}
+    AUDIT_TABLE_NAME: MRAAuditTable-${self:provider.stage}
 
 package:
 # TODO: Rename zipfile in build.sh and build.cmd to match this
@@ -26,7 +26,10 @@ functions:
     handler: RentAccountApi::RentAccountApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      TABLE_NAME: ${self:provider.environment.TABLE_NAME}
+      AUDIT_TABLE_NAME: ${self:provider.environment.AUDIT_TABLE_NAME}
+      CRM_API_ENDPOINT: ${ssm:/rent-account-api/${self:provider.stage}/crm-api-endpoint}
+      CRM_TOKEN_ENDPOINT: ${ssm:/rent-account-api/${self:provider.stage}/crm-token-endpoint}
+      CRM_TOKEN_KEY: ${ssm:/rent-account-api/${self:provider.stage}/crm-token-key}
       ENV: ${self:provider.stage}
     events:
       - http:
