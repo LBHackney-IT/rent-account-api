@@ -14,7 +14,7 @@ provider:
           burstLimit: 200
           rateLimit: 100
   environment:
-    AUDIT_TABLE_NAME: MRAAuditTable-${self:provider.stage}
+    AUDIT_TABLE_NAME: MyRentAccountAdminAudit-${self:provider.stage}
 
 package:
 # TODO: Rename zipfile in build.sh and build.cmd to match this
