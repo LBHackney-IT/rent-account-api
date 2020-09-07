@@ -31,7 +31,7 @@ namespace RentAccountApi.Tests.V1.Factories
                 Name = "Bxx Bxxxxx"
             };
 
-            var response = CRMFactory.ToResponse(paymentReference, crmRentAccountResponse, privacy);
+            var response = CRMFactory.ToRentAccountResponse(paymentReference, crmRentAccountResponse, privacy);
 
             response.Name.Should().Equals(rentAccountResponse.Name);
         }
@@ -48,7 +48,7 @@ namespace RentAccountApi.Tests.V1.Factories
                 Name = "Bob Bobson"
             };
 
-            var response = CRMFactory.ToResponse(paymentReference, crmRentAccountResponse, privacy);
+            var response = CRMFactory.ToRentAccountResponse(paymentReference, crmRentAccountResponse, privacy);
 
             response.Name.Should().Equals(rentAccountResponse.Name);
         }
@@ -67,7 +67,7 @@ namespace RentAccountApi.Tests.V1.Factories
                 HasArrears = false
             };
 
-            var response = CRMFactory.ToResponse(paymentReference, crmRentAccountResponse, privacy);
+            var response = CRMFactory.ToRentAccountResponse(paymentReference, crmRentAccountResponse, privacy);
 
             response.CurrentBalance.Should().Equals(rentAccountResponse.CurrentBalance);
             response.HasArrears.Should().Equals(rentAccountResponse.HasArrears);
@@ -87,7 +87,7 @@ namespace RentAccountApi.Tests.V1.Factories
                 HasArrears = true
             };
 
-            var response = CRMFactory.ToResponse(paymentReference, crmRentAccountResponse, privacy);
+            var response = CRMFactory.ToRentAccountResponse(paymentReference, crmRentAccountResponse, privacy);
 
             response.CurrentBalance.Should().Equals(rentAccountResponse.CurrentBalance);
             response.HasArrears.Should().Equals(rentAccountResponse.HasArrears);
@@ -106,7 +106,7 @@ namespace RentAccountApi.Tests.V1.Factories
                 ToPay = 800.00M
             };
 
-            var response = CRMFactory.ToResponse(paymentReference, crmRentAccountResponse, privacy);
+            var response = CRMFactory.ToRentAccountResponse(paymentReference, crmRentAccountResponse, privacy);
 
             response.ToPay.Should().Equals(rentAccountResponse.ToPay);
         }
@@ -123,9 +123,36 @@ namespace RentAccountApi.Tests.V1.Factories
                 ToPay = 0.00M
             };
 
-            var response = CRMFactory.ToResponse(paymentReference, crmRentAccountResponse, privacy);
+            var response = CRMFactory.ToRentAccountResponse(paymentReference, crmRentAccountResponse, privacy);
 
             response.ToPay.Should().Equals(rentAccountResponse.ToPay);
+        }
+
+        [Test]
+        public void CheckLinkedAccountResponseIsRight()
+        {
+            var crmLinkedAccountResponse = new CrmLinkedAccountResponse
+            {
+                value = new List<CRMLinkedAccount>()
+                {
+                    new CRMLinkedAccount
+                    {
+                        csso_id = "456",
+                        hackney_csso_linked_rent_accountid = "12345",
+                        rent_account_number = "7890"
+                    }
+                }
+            };
+
+            var linkedAccountResponse = new LinkedAccountResponse
+            {
+                CSSOId = "456",
+                LinkedAccountId = "12345",
+                AccountNumber = "7890"
+            };
+
+            var response = CRMFactory.ToLinkedAccountResponse(crmLinkedAccountResponse);
+            response.Should().BeEquivalentTo(linkedAccountResponse);
         }
     }
 }

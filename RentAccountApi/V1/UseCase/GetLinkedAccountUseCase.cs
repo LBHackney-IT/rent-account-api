@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace RentAccountApi.V1.UseCase
 {
-    public class GetRentAccountUseCase : IGetRentAccountUseCase
+    public class GetLinkedAccountUseCase : IGetLinkedAccountUseCase
     {
         private readonly ICRMGateway _crmGateway;
         private readonly ICRMTokenGateway _crmTokenGateway;
 
-        public GetRentAccountUseCase(ICRMGateway crmGateway, ICRMTokenGateway crmTokenGateway)
+        public GetLinkedAccountUseCase(ICRMGateway crmGateway, ICRMTokenGateway crmTokenGateway)
         {
             _crmGateway = crmGateway;
             _crmTokenGateway = crmTokenGateway;
         }
 
-        public async Task<RentAccountResponse> Execute(string paymentReference, bool privacy)
+        public async Task<LinkedAccountResponse> Execute(string cssoId)
         {
             var token = await _crmTokenGateway.GetCRMToken();
-            var crmResponse = await _crmGateway.GetRentAccount(paymentReference, token);
-            var rentAccountResponse = crmResponse.value.Count > 0 ? CRMFactory.ToRentAccountResponse(paymentReference, crmResponse, privacy) : null;
-            return rentAccountResponse;
+            var crmResponse = await _crmGateway.GetLinkedAccount(cssoId, token);
+            var linkedAccountResponse = crmResponse.value.Count > 0 ? CRMFactory.ToLinkedAccountResponse(crmResponse) : null;
+            return linkedAccountResponse;
         }
     }
 }

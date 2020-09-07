@@ -21,6 +21,8 @@ namespace RentAccountApi.Tests.V1.Controllers
         private RentAccountCRMController _classUnderTest;
         private Mock<ICheckRentAccountExistsUseCase> _checkRentAccountExistsUseCase;
         private Mock<IGetRentAccountUseCase> _getRentAccountUseCase;
+        private Mock<IGetLinkedAccountUseCase> _getLinkedAccountUseCase;
+        private Mock<IDeleteLinkedAccountUseCase> _deleteLinkedAccountUseCase;
         private Faker _faker;
 
         [SetUp]
@@ -28,7 +30,9 @@ namespace RentAccountApi.Tests.V1.Controllers
         {
             _checkRentAccountExistsUseCase = new Mock<ICheckRentAccountExistsUseCase>();
             _getRentAccountUseCase = new Mock<IGetRentAccountUseCase>();
-            _classUnderTest = new RentAccountCRMController(_checkRentAccountExistsUseCase.Object, _getRentAccountUseCase.Object);
+            _getLinkedAccountUseCase = new Mock<IGetLinkedAccountUseCase>();
+            _deleteLinkedAccountUseCase = new Mock<IDeleteLinkedAccountUseCase>();
+            _classUnderTest = new RentAccountCRMController(_checkRentAccountExistsUseCase.Object, _getRentAccountUseCase.Object, _getLinkedAccountUseCase.Object, _deleteLinkedAccountUseCase.Object);
             _faker = new Faker();
         }
 
@@ -98,6 +102,71 @@ namespace RentAccountApi.Tests.V1.Controllers
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(404);
             response.Value.Should().Be("Account not found");
+        }
+
+        [Test]
+        public async Task GetLinkedAccountAnd200()
+        {
+            var linkedAccountResponse = new LinkedAccountResponse
+            {
+                AccountNumber = "123",
+                CSSOId = "456",
+                LinkedAccountId = "789"
+            };
+            var cssoId = "456";
+
+            _getLinkedAccountUseCase.Setup(x => x.Execute(cssoId)).ReturnsAsync(linkedAccountResponse);
+            var response = (await _classUnderTest.GetLinkedAccount(cssoId).ConfigureAwait(true) as IActionResult) as OkObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            response.Value.Should().BeEquivalentTo(linkedAccountResponse);
+        }
+
+        [Test]
+        public async Task GetLinkedAccountWithInvalidRefReturns404()
+        {
+            var linkedAccountResponse = new LinkedAccountResponse();
+            linkedAccountResponse = null;
+            var cssoId = "456";
+
+            _getLinkedAccountUseCase.Setup(x => x.Execute(cssoId)).ReturnsAsync(linkedAccountResponse);
+            var response = (await _classUnderTest.GetLinkedAccount(cssoId).ConfigureAwait(true) as IActionResult) as ObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(404);
+            response.Value.Should().Be("Linked account not found");
+        }
+
+        #endregion
+
+        #region Delete tests
+
+        [Test]
+        public async Task DeleteLinkedAccountAnd204()
+        {
+            var deleteAccountResponse = new DeleteLinkedAccountResponse
+            {
+                success = true
+            };
+            var cssoId = "456";
+
+            _deleteLinkedAccountUseCase.Setup(x => x.Execute(cssoId)).ReturnsAsync(deleteAccountResponse);
+            var response = (await _classUnderTest.UnlinkAccount(cssoId).ConfigureAwait(true) as IActionResult) as NoContentResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(204);
+        }
+
+        [Test]
+        public async Task DeleteLinkedAccountWithInvalidRefReturns404()
+        {
+            var deleteAccountResponse = new DeleteLinkedAccountResponse();
+            deleteAccountResponse = null;
+            var cssoId = "456";
+
+            _deleteLinkedAccountUseCase.Setup(x => x.Execute(cssoId)).ReturnsAsync(deleteAccountResponse);
+            var response = (await _classUnderTest.UnlinkAccount(cssoId).ConfigureAwait(true) as IActionResult) as ObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(404);
+            response.Value.Should().Be("Linked account not found");
         }
 
         #endregion
