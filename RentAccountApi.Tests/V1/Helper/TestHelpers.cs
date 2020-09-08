@@ -11,9 +11,9 @@ namespace RentAccountApi.Tests.V1.Helper
 {
     public static class TestHelpers
     {
-        public static CreateAuditRequest CreateAuditRequestObject(Faker faker)
+        public static CreateAdminAuditRequest CreateAuditRequestObject(Faker faker)
         {
-            return new CreateAuditRequest
+            return new CreateAdminAuditRequest
             {
                 User = faker.Person.Email.ToLower(),
                 RentAccountNumber = faker.Random.Int(5).ToString(),
@@ -22,9 +22,9 @@ namespace RentAccountApi.Tests.V1.Helper
             };
         }
 
-        public static AuditRecord CreateAuditRecordObject(Faker faker)
+        public static AdminAuditRecord CreateAuditRecordObject(Faker faker)
         {
-            return new AuditRecord
+            return new AdminAuditRecord
             {
                 User = faker.Person.Email.ToLower(),
                 RentAccountNumber = faker.Random.Int(5).ToString(),

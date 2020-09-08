@@ -8,6 +8,6 @@ namespace RentAccountApi.V1.UseCase.Interfaces
 {
     public interface IPostAuditUseCase
     {
-        void Execute(CreateAuditRequest auditRequest);
+        void CreateAdminAudit(CreateAdminAuditRequest auditRequest);
     }
 }

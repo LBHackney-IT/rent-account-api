@@ -7,6 +7,6 @@ namespace RentAccountApi.V1.Boundary.Response
 {
     public class GetAllAuditsResponse
     {
-        public List<AuditResponse> AuditRecords { get; set; }
+        public List<AdminAuditResponse> AuditRecords { get; set; }
     }
 }

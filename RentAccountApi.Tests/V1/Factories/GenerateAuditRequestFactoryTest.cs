@@ -37,7 +37,7 @@ namespace RentAccountApi.Tests.V1.Factories
         [Test]
         public void CanMapAuditRecordsToGetAllAuditsResponseObject()
         {
-            var auditRecords = new List<AuditRecord>
+            var auditRecords = new List<AdminAuditRecord>
             {
                TestHelpers.CreateAuditRecordObject(_faker),
                TestHelpers.CreateAuditRecordObject(_faker)

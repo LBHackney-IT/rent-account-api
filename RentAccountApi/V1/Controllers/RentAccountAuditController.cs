@@ -36,11 +36,11 @@ namespace RentAccountApi.V1.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
         [HttpPost]
-        public IActionResult GenerateAuditLog([FromBody] CreateAuditRequest auditRequest)
+        public IActionResult GenerateAdminAuditLog([FromBody] CreateAdminAuditRequest auditRequest)
         {
             try
             {
-                _postAuditUseCase.Execute(auditRequest);
+                _postAuditUseCase.CreateAdminAudit(auditRequest);
                 return new NoContentResult();
             }
             catch (AuditNotInsertedException ex)

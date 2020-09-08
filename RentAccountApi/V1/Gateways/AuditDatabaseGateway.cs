@@ -29,7 +29,7 @@ namespace RentAccountApi.V1.Gateways
             _databaseClient = database.DynamoDBClient;
         }
 
-        public async Task GenerateAdminAuditRecord(MyRentAccountAudit generateAuditRequest)
+        public async Task GenerateAdminAuditRecord(MyRentAccountAdminAudit generateAuditRequest)
         {
             LambdaLogger.Log(string.Format("Saving to DB - {0}", JsonConvert.SerializeObject(generateAuditRequest)));
             var documentItem = ConstructDynamoDocument(generateAuditRequest);
@@ -54,7 +54,7 @@ namespace RentAccountApi.V1.Gateways
             }
         }
 
-        public async Task<List<AuditRecord>> GetAuditByUser(string user, int recordLimit)
+        public async Task<List<AdminAuditRecord>> GetAuditByUser(string user, int recordLimit)
         {
             var tableName = _documentsTable.TableName;
             var queryRequest = new QueryRequest
@@ -70,7 +70,7 @@ namespace RentAccountApi.V1.Gateways
                 },
             };
             var results = await _databaseClient.QueryAsync(queryRequest);
-            return results.Items.Select(entry => new AuditRecord
+            return results.Items.Select(entry => new AdminAuditRecord
             {
                 User = entry["User"].S?.ToString(),
                 RentAccountNumber = entry["RentAccountNumber"].S?.ToString(),
@@ -80,7 +80,7 @@ namespace RentAccountApi.V1.Gateways
             }).ToList(); //TODO: how do we deal with database entries that have empty columns? i.e. records created prior to a new column being added.
         }
 
-        private static Document ConstructDynamoDocument(MyRentAccountAudit generateAuditRequest)
+        private static Document ConstructDynamoDocument(MyRentAccountAdminAudit generateAuditRequest)
         {
             return new Document
             {

@@ -34,9 +34,9 @@ namespace RentAccountApi.Tests.V1.UseCase
         {
             var auditRequest = TestHelpers.CreateAuditRequestObject(_faker);
             _mockGateway.Setup(x => x.GenerateAdminAuditRecord(AuditFactory.ToAuditRequest(auditRequest)));
-            _classUnderTest.Execute(auditRequest);
+            _classUnderTest.CreateAdminAudit(auditRequest);
 
-            _mockGateway.Verify(x => x.GenerateAdminAuditRecord(It.IsAny<MyRentAccountAudit>()), Times.Once);
+            _mockGateway.Verify(x => x.GenerateAdminAuditRecord(It.IsAny<MyRentAccountAdminAudit>()), Times.Once);
         }
     }
 }

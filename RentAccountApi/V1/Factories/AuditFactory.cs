@@ -11,12 +11,12 @@ namespace RentAccountApi.V1.Factories
 {
     public static class AuditFactory
     {
-        public static MyRentAccountAudit ToAuditRequest(CreateAuditRequest auditRequestObject)
+        public static MyRentAccountAdminAudit ToAuditRequest(CreateAdminAuditRequest auditRequestObject)
         {
             //TODO: Map the rest of the fields in the domain object.
             // More information on this can be found here https://github.com/LBHackney-IT/lbh-base-api/wiki/Factory-object-mappings
 
-            return new MyRentAccountAudit
+            return new MyRentAccountAdminAudit
             {
                 User = auditRequestObject.User.ToLower(),
                 RentAccountNumber = auditRequestObject.RentAccountNumber,
@@ -26,9 +26,9 @@ namespace RentAccountApi.V1.Factories
             };
         }
 
-        public static GetAllAuditsResponse ToGetAllAuditsResponse(List<AuditRecord> auditRecords)
+        public static GetAllAuditsResponse ToGetAllAuditsResponse(List<AdminAuditRecord> auditRecords)
         {
-            var auditResponse = auditRecords.Select(record => new AuditResponse
+            var auditResponse = auditRecords.Select(record => new AdminAuditResponse
             {
                 User = record.User,
                 TimeStamp = record.TimeStamp,
