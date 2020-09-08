@@ -29,7 +29,7 @@ namespace RentAccountApi.V1.Gateways
             _databaseClient = database.DynamoDBClient;
         }
 
-        public async Task GenerateAuditRecord(MyRentAccountAudit generateAuditRequest)
+        public async Task GenerateAdminAuditRecord(MyRentAccountAudit generateAuditRequest)
         {
             LambdaLogger.Log(string.Format("Saving to DB - {0}", JsonConvert.SerializeObject(generateAuditRequest)));
             var documentItem = ConstructDynamoDocument(generateAuditRequest);
