@@ -122,7 +122,7 @@ namespace RentAccountApi
         {
 
             //Dynamo DB
-            var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
+            var tableName = Environment.GetEnvironmentVariable("AUDIT_TABLE_NAME");
             LambdaLogger.Log($"Dynamo table name {tableName}");
             var dynamoConfig = new AmazonDynamoDBConfig { RegionEndpoint = RegionEndpoint.EUWest2 };
             var dynamoDbClient = new DynamoDBClient(dynamoConfig);
@@ -143,7 +143,6 @@ namespace RentAccountApi
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            //var tableName = Environment.GetEnvironmentVariable("TABLE_NAME");
             services.AddScoped<IAuditDatabaseGateway, AuditDatabaseGateway>();
             var crmUrl = Environment.GetEnvironmentVariable("CRM_API_ENDPOINT");
 
