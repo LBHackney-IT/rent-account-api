@@ -11,7 +11,7 @@ namespace RentAccountApi.V1.Factories
 {
     public static class AuditFactory
     {
-        public static MyRentAccountAdminAudit ToAuditRequest(CreateAdminAuditRequest auditRequestObject)
+        public static MyRentAccountAdminAudit ToAdminAuditRequest(CreateAdminAuditRequest auditRequestObject)
         {
             //TODO: Map the rest of the fields in the domain object.
             // More information on this can be found here https://github.com/LBHackney-IT/lbh-base-api/wiki/Factory-object-mappings
@@ -24,6 +24,11 @@ namespace RentAccountApi.V1.Factories
                 CSSOLogin = auditRequestObject.CSSOLogin.ToString(),
                 AuditAction = auditRequestObject.AuditAction.ToString().ToLower()
             };
+        }
+
+        public static MyRentAccountResidentAudit ToResidentAuditRequest(CreateResidentAuditRequest residentAuditRequest)
+        {
+            throw new NotImplementedException();
         }
 
         public static GetAllAuditsResponse ToGetAllAuditsResponse(List<AdminAuditRecord> auditRecords)

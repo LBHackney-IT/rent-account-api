@@ -57,6 +57,36 @@ namespace RentAccountApi.Tests.V1.Controllers
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(204);
         }
+
+        [Test]
+        public async Task EnsureControllerPostMethodCallsPostAuditUseCaseForResidentAudit()
+        {
+            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(It.IsAny<CreateResidentAuditRequest>()));
+            await _classUnderTest.GenerateResidentAuditLog(It.IsAny<CreateResidentAuditRequest>()).ConfigureAwait(true);
+
+            _mockPostAuditUseCase.Verify(x => x.CreateResidentAudit(It.IsAny<CreateResidentAuditRequest>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ControllerPostMethodShouldReturnResponseOfTypeNoContentResultForResidentAudit()
+        {
+            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(It.IsAny<CreateResidentAuditRequest>()));
+            var result = await _classUnderTest.GenerateResidentAuditLog(It.IsAny<CreateResidentAuditRequest>()).ConfigureAwait(true) as NoContentResult;
+
+            result.Should().NotBeNull();
+            result.Should().BeOfType<NoContentResult>();
+        }
+
+        [Test]
+        public async Task ControllerPostMethodShouldReturn204StatusCodeForResidentAudit()
+        {
+            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(It.IsAny<CreateResidentAuditRequest>()));
+            var result = await _classUnderTest.GenerateResidentAuditLog(It.IsAny<CreateResidentAuditRequest>()).ConfigureAwait(true) as NoContentResult;
+
+            result.Should().NotBeNull();
+            result.StatusCode.Should().Be(204);
+        }
+
         #endregion
 
         #region GET tests

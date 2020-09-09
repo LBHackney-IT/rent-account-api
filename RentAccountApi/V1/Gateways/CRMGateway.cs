@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using RentAccountApi.V1.Boundary;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using RentAccountApi.V1.Gateways.Helpers;
@@ -85,5 +86,13 @@ namespace RentAccountApi.V1.Gateways
             return status == 204 ? true : false;
         }
 
+        public async Task<bool> GenerateResidentAuditRecord(MyRentAccountResidentAudit myRentAccountResidentAudit, string token)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(myRentAccountResidentAudit));
+            _client.DefaultRequestHeaders.Add("Authorization", token);
+            var response = await _client.PostAsync(new Uri($"hackney_housingaccountaudits()", UriKind.Relative), content).ConfigureAwait(true);
+            var status = (int) response.StatusCode;
+            return status == 204 ? true : false;
+        }
     }
 }
