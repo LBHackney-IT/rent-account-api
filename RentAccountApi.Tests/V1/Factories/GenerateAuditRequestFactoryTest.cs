@@ -25,7 +25,7 @@ namespace RentAccountApi.Tests.V1.Factories
         {
             var auditRequest = TestHelpers.CreateAuditRequestObject(_faker);
 
-            var factoryResponse = AuditFactory.ToAuditRequest(auditRequest);
+            var factoryResponse = AuditFactory.ToAdminAuditRequest(auditRequest);
 
             factoryResponse.User.Should().Be(auditRequest.User);
             factoryResponse.RentAccountNumber.Should().Be(auditRequest.RentAccountNumber);

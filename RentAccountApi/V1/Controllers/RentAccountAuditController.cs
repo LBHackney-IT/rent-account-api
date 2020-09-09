@@ -28,7 +28,7 @@ namespace RentAccountApi.V1.Controllers
         }
 
         /// <summary>
-        /// Records an audit log for users accessing rent accounts
+        /// Records an audit log for admin users accessing rent accounts
         /// </summary>
         /// <response code="204">Audit Log successfully generated</response>
         /// <response code="400">One or more request parameters are invalid or missing</response>
@@ -42,6 +42,40 @@ namespace RentAccountApi.V1.Controllers
             {
                 _postAuditUseCase.Execute(auditRequest);
                 return new NoContentResult();
+            }
+            catch (AuditNotInsertedException ex)
+            {
+                return StatusCode(500, string.Format("There was a problem inserting the audit data into the database. {0}", ex.Message));
+            }
+        }
+
+        /// <summary>
+        /// Records an audit log for residents accessing rent accounts
+        /// </summary>
+        /// <response code="204">Audit Log successfully generated</response>
+        /// <response code="400">One or more request parameters are invalid or missing</response>
+        /// <response code="500">There was a problem recording an audit.</response>
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
+        [HttpPost]
+        public async Task<IActionResult> GenerateResidentAuditLog([FromBody] CreateResidentAuditRequest auditRequest)
+        {
+            try
+            {
+                var response = await _postAuditUseCase.CreateResidentAudit(auditRequest);
+                if (response != null && response.success)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    throw new AuditNotInsertedException();
+                }
+            }
+            catch (MissingQueryParameterException e)
+            {
+                LambdaLogger.Log(e.Message);
+                return BadRequest(e.Message);
             }
             catch (AuditNotInsertedException ex)
             {
