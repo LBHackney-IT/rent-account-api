@@ -42,5 +42,17 @@ namespace RentAccountApi.Tests.V1.UseCase
 
             _mockGateway.Verify(x => x.GenerateAdminAuditRecord(It.IsAny<MyRentAccountAdminAudit>()), Times.Once);
         }
+
+        [Test]
+        public async Task UseCaseShouldCallGatewayToInsertResidentAuditData()
+        {
+            var token = "12345";
+            var auditRequest = TestHelpers.CreateResidentAuditRequestObject(_faker, true);
+            _mockCrmTokenGateway.Setup(x => x.GetCRMToken()).ReturnsAsync(token);
+            _mockCrmGateway.Setup(x => x.GenerateResidentAuditRecord(AuditFactory.ToResidentAuditRequest(auditRequest), token)).ReturnsAsync(true);
+            await _classUnderTest.CreateResidentAudit(auditRequest).ConfigureAwait(true);
+
+            _mockCrmGateway.Verify(x => x.GenerateResidentAuditRecord(It.IsAny<MyRentAccountResidentAudit>(), token), Times.Once);
+        }
     }
 }

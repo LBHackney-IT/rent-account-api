@@ -76,6 +76,16 @@ namespace RentAccountApi.Tests.V1.Helper
             return crmRentAccountResponse;
         }
 
+        public static CreateResidentAuditRequest CreateResidentAuditRequestObject(Faker faker, bool loggedIn)
+        {
+            return new CreateResidentAuditRequest
+            {
+                PostCode = faker.PickRandomParam(new[] { "N8 0DY", "RM3 0FS", "E8 1DY" }),
+                RentAccountNumber = faker.Random.Int(5).ToString(),
+                LoggedIn = loggedIn
+            };
+        }
+
         public static CrmRentAccountResponse CreateNothingToPayResponseObject()
         {
             CrmRentAccountResponse crmRentAccountResponse = CreateRentAccountResponseObject(true);

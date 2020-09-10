@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RentAccountApi.V1.Gateways
@@ -88,7 +89,7 @@ namespace RentAccountApi.V1.Gateways
 
         public async Task<bool> GenerateResidentAuditRecord(MyRentAccountResidentAudit myRentAccountResidentAudit, string token)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(myRentAccountResidentAudit));
+            var content = new StringContent(JsonConvert.SerializeObject(myRentAccountResidentAudit), Encoding.UTF8, "application/json");
             _client.DefaultRequestHeaders.Add("Authorization", token);
             var response = await _client.PostAsync(new Uri($"hackney_housingaccountaudits()", UriKind.Relative), content).ConfigureAwait(true);
             var status = (int) response.StatusCode;

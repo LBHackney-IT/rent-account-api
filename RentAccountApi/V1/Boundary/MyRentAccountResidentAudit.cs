@@ -9,10 +9,10 @@ namespace RentAccountApi.V1.Boundary
 {
     public class MyRentAccountResidentAudit
     {
-        /*hackney_accountnumber: accountNumber,
-      hackney_accounttype: "1",
-      hackney_name: "Rent Account Audit History",
-      hackney_postcode: postcode,
-      hackney_tagreferencenumber: tagReference,*/
+        public string hackney_accountnumber { get; set; }
+        public string hackney_accounttype { get; set; }
+        public string hackney_name { get; set; }
+        public string hackney_postcode { get; set; }
+        public string hackney_tagreferencenumber { get; set; }
     }
 }
