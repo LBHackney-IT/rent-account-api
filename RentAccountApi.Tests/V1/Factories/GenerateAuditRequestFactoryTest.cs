@@ -21,11 +21,11 @@ namespace RentAccountApi.Tests.V1.Factories
             _faker = new Faker("en_GB");
         }
         [Test]
-        public void CanMapInputToGenerateAuditRequestObject()
+        public void CanMapInputToGenerateAdminAuditRequestObject()
         {
             var auditRequest = TestHelpers.CreateAuditRequestObject(_faker);
 
-            var factoryResponse = AuditFactory.ToAuditRequest(auditRequest);
+            var factoryResponse = AuditFactory.ToAdminAuditRequest(auditRequest);
 
             factoryResponse.User.Should().Be(auditRequest.User);
             factoryResponse.RentAccountNumber.Should().Be(auditRequest.RentAccountNumber);
@@ -35,9 +35,9 @@ namespace RentAccountApi.Tests.V1.Factories
         }
 
         [Test]
-        public void CanMapAuditRecordsToGetAllAuditsResponseObject()
+        public void CanMapAuditRecordsToGetAllAdminAuditsResponseObject()
         {
-            var auditRecords = new List<AuditRecord>
+            var auditRecords = new List<AdminAuditRecord>
             {
                TestHelpers.CreateAuditRecordObject(_faker),
                TestHelpers.CreateAuditRecordObject(_faker)
@@ -49,6 +49,41 @@ namespace RentAccountApi.Tests.V1.Factories
             factoryResponse.AuditRecords.Count.Should().Equals(auditRecords.Count);
             factoryResponse.AuditRecords[0].User.Should().Equals(auditRecords[0].User);
             factoryResponse.AuditRecords[0].CSSOLogin.ToString().Should().Equals(auditRecords[0].CSSOLogin);
+        }
+
+        [Test]
+        public void CanMapInputToGenerateResidentAuditRequestObject()
+        {
+            var auditRequest = TestHelpers.CreateResidentAuditRequestObject(_faker, true);
+
+            var factoryResponse = AuditFactory.ToResidentAuditRequest(auditRequest);
+
+            factoryResponse.hackney_accountnumber.Should().Be(auditRequest.RentAccountNumber);
+            factoryResponse.hackney_postcode.Should().Be(auditRequest.PostCode);
+        }
+
+        [Test]
+        public void CanMapInputToGenerateResidentAuditRequestObjectForLoggedInUser()
+        {
+            var auditRequest = TestHelpers.CreateResidentAuditRequestObject(_faker, true);
+
+            var factoryResponse = AuditFactory.ToResidentAuditRequest(auditRequest);
+
+            factoryResponse.hackney_accountnumber.Should().Be(auditRequest.RentAccountNumber);
+            factoryResponse.hackney_postcode.Should().Be(auditRequest.PostCode);
+            factoryResponse.hackney_name.Should().Equals("One Account Rent Account Audit History");
+        }
+
+        [Test]
+        public void CanMapInputToGenerateResidentAuditRequestObjectForAnonUser()
+        {
+            var auditRequest = TestHelpers.CreateResidentAuditRequestObject(_faker, false);
+
+            var factoryResponse = AuditFactory.ToResidentAuditRequest(auditRequest);
+
+            factoryResponse.hackney_accountnumber.Should().Be(auditRequest.RentAccountNumber);
+            factoryResponse.hackney_postcode.Should().Be(auditRequest.PostCode);
+            factoryResponse.hackney_name.Should().Equals("Anonymous Rent Account Audit History");
         }
     }
 }

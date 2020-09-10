@@ -1,3 +1,4 @@
+using RentAccountApi.V1.Boundary;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using System;
@@ -13,5 +14,6 @@ namespace RentAccountApi.V1.Gateways
         Task<CrmRentAccountResponse> GetRentAccount(string paymentReference, string token);
         Task<CrmLinkedAccountResponse> GetLinkedAccount(string cssoId, string token);
         Task<bool> DeleteLinkedAccount(string linkId);
+        Task<bool> GenerateResidentAuditRecord(MyRentAccountResidentAudit myRentAccountResidentAudit, string token);
     }
 }

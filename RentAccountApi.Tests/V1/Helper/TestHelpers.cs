@@ -11,9 +11,9 @@ namespace RentAccountApi.Tests.V1.Helper
 {
     public static class TestHelpers
     {
-        public static CreateAuditRequest CreateAuditRequestObject(Faker faker)
+        public static CreateAdminAuditRequest CreateAuditRequestObject(Faker faker)
         {
-            return new CreateAuditRequest
+            return new CreateAdminAuditRequest
             {
                 User = faker.Person.Email.ToLower(),
                 RentAccountNumber = faker.Random.Int(5).ToString(),
@@ -22,9 +22,9 @@ namespace RentAccountApi.Tests.V1.Helper
             };
         }
 
-        public static AuditRecord CreateAuditRecordObject(Faker faker)
+        public static AdminAuditRecord CreateAuditRecordObject(Faker faker)
         {
-            return new AuditRecord
+            return new AdminAuditRecord
             {
                 User = faker.Person.Email.ToLower(),
                 RentAccountNumber = faker.Random.Int(5).ToString(),
@@ -74,6 +74,16 @@ namespace RentAccountApi.Tests.V1.Helper
                 }
             };
             return crmRentAccountResponse;
+        }
+
+        public static CreateResidentAuditRequest CreateResidentAuditRequestObject(Faker faker, bool loggedIn)
+        {
+            return new CreateResidentAuditRequest
+            {
+                PostCode = faker.PickRandomParam(new[] { "N8 0DY", "RM3 0FS", "E8 1DY" }),
+                RentAccountNumber = faker.Random.Int(5).ToString(),
+                LoggedIn = loggedIn
+            };
         }
 
         public static CrmRentAccountResponse CreateNothingToPayResponseObject()

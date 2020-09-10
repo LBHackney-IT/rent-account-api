@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace RentAccountApi.V1.Boundary.Response
 {
-    public class GetAllAuditsResponse
+    public class AddResidentAuditResponse
     {
-        public List<AdminAuditResponse> AuditRecords { get; set; }
+        public bool success { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RentAccountApi.V1.Boundary.Response
 {
-    public class AuditResponse
+    public class AdminAuditResponse
     {
         /// <example>
         /// bob.hoskins@film.com

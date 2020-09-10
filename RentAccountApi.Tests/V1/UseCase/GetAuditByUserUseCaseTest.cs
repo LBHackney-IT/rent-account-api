@@ -35,7 +35,7 @@ namespace RentAccountApi.Tests.V1.UseCase
         public void ReturnsAuditList()
         {
             var stubbedAudits =
-                new List<AuditRecord>
+                new List<AdminAuditRecord>
                 {
                     TestHelpers.CreateAuditRecordObject(_faker),
                     TestHelpers.CreateAuditRecordObject(_faker)

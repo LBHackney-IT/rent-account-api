@@ -8,7 +8,7 @@ namespace RentAccountApi.V1.Gateways
 {
     public interface IAuditDatabaseGateway
     {
-        Task GenerateAuditRecord(MyRentAccountAudit myRentAccountAudit);
-        Task<List<AuditRecord>> GetAuditByUser(string user, int recordLimit);
+        Task GenerateAdminAuditRecord(MyRentAccountAdminAudit myRentAccountAudit);
+        Task<List<AdminAuditRecord>> GetAuditByUser(string user, int recordLimit);
     }
 }
