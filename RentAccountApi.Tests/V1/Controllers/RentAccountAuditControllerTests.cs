@@ -88,7 +88,6 @@ namespace RentAccountApi.Tests.V1.Controllers
 
             _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(request)).ReturnsAsync(response);
             var result = await _classUnderTest.GenerateResidentAuditLog(request).ConfigureAwait(true) as NoContentResult;
-
             result.Should().NotBeNull();
             result.Should().BeOfType<NoContentResult>();
         }
@@ -106,7 +105,6 @@ namespace RentAccountApi.Tests.V1.Controllers
             };
             _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(request)).ReturnsAsync(response);
             var result = await _classUnderTest.GenerateResidentAuditLog(request).ConfigureAwait(true) as NoContentResult;
-
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(204);
         }

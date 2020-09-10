@@ -19,6 +19,5 @@ namespace RentAccountApi.V1.Boundary.Request
         /// </example>
         [Required]
         public bool LoggedIn { get; set; }
-
     }
 }
