@@ -36,11 +36,12 @@ namespace RentAccountApi.V1.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
         [HttpPost]
-        public IActionResult GenerateAuditLog([FromBody] CreateAuditRequest auditRequest)
+        [Route("admin")]
+        public IActionResult GenerateAdminAuditLog([FromBody] CreateAdminAuditRequest auditRequest)
         {
             try
             {
-                _postAuditUseCase.Execute(auditRequest);
+                _postAuditUseCase.CreateAdminAudit(auditRequest);
                 return new NoContentResult();
             }
             catch (AuditNotInsertedException ex)
@@ -58,6 +59,7 @@ namespace RentAccountApi.V1.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(NoContentResult), StatusCodes.Status204NoContent)]
         [HttpPost]
+        [Route("resident")]
         public async Task<IActionResult> GenerateResidentAuditLog([FromBody] CreateResidentAuditRequest auditRequest)
         {
             try
@@ -90,6 +92,7 @@ namespace RentAccountApi.V1.Controllers
         /// <response code="400">One or more request parameters are invalid or missing</response>
         [ProducesResponseType(typeof(GetAllAuditsResponse), StatusCodes.Status200OK)]
         [HttpGet]
+        [Route("admin")]
         public async Task<IActionResult> GetAuditByUser([FromQuery] string userEmail)
         {
             try

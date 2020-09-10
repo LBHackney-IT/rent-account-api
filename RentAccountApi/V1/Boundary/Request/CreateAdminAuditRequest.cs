@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RentAccountApi.V1.Boundary.Request
 {
-    public class CreateAuditRequest
+    public class CreateAdminAuditRequest
     {
         /// <example>
         /// john.smith@test.com

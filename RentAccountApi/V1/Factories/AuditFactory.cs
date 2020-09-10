@@ -28,7 +28,14 @@ namespace RentAccountApi.V1.Factories
 
         public static MyRentAccountResidentAudit ToResidentAuditRequest(CreateResidentAuditRequest residentAuditRequest)
         {
-            throw new NotImplementedException();
+            return new MyRentAccountResidentAudit
+            {
+                hackney_accountnumber = residentAuditRequest.RentAccountNumber,
+                hackney_postcode = residentAuditRequest.PostCode,
+                hackney_name = residentAuditRequest.LoggedIn ? "One Account Rent Account Audit History" : "Anonymous Rent Account Audit History",
+                hackney_accounttype = "1",
+                hackney_tagreferencenumber = ""
+            };
         }
 
         public static GetAllAuditsResponse ToGetAllAuditsResponse(List<AdminAuditRecord> auditRecords)

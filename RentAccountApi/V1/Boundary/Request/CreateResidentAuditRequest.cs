@@ -15,9 +15,9 @@ namespace RentAccountApi.V1.Boundary.Request
         [Required]
         public string PostCode { get; set; }
         /// <example>
-        /// 12345/01
+        /// true/false
         /// </example>
         [Required]
-        public string TenancyReference { get; set; }
+        public bool LoggedIn { get; set; }
     }
 }

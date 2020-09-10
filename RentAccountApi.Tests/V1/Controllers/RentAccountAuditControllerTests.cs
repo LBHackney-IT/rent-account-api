@@ -32,17 +32,17 @@ namespace RentAccountApi.Tests.V1.Controllers
         [Test]
         public void EnsureControllerPostMethodCallsPostAuditUseCase()
         {
-            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<CreateAuditRequest>()));
-            _classUnderTest.GenerateAuditLog(It.IsAny<CreateAuditRequest>());
+            _mockPostAuditUseCase.Setup(x => x.CreateAdminAudit(It.IsAny<CreateAdminAuditRequest>()));
+            _classUnderTest.GenerateAdminAuditLog(It.IsAny<CreateAdminAuditRequest>());
 
-            _mockPostAuditUseCase.Verify(x => x.Execute(It.IsAny<CreateAuditRequest>()), Times.Once);
+            _mockPostAuditUseCase.Verify(x => x.CreateAdminAudit(It.IsAny<CreateAdminAuditRequest>()), Times.Once);
         }
 
         [Test]
         public void ControllerPostMethodShouldReturnResponseOfTypeNoContentResult()
         {
-            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<CreateAuditRequest>()));
-            var result = _classUnderTest.GenerateAuditLog(It.IsAny<CreateAuditRequest>()) as NoContentResult;
+            _mockPostAuditUseCase.Setup(x => x.CreateAdminAudit(It.IsAny<CreateAdminAuditRequest>()));
+            var result = _classUnderTest.GenerateAdminAuditLog(It.IsAny<CreateAdminAuditRequest>()) as NoContentResult;
 
             result.Should().NotBeNull();
             result.Should().BeOfType<NoContentResult>();
@@ -51,38 +51,60 @@ namespace RentAccountApi.Tests.V1.Controllers
         [Test]
         public void ControllerPostMethodShouldReturn204StatusCode()
         {
-            _mockPostAuditUseCase.Setup(x => x.Execute(It.IsAny<CreateAuditRequest>()));
-            var result = _classUnderTest.GenerateAuditLog(It.IsAny<CreateAuditRequest>()) as NoContentResult;
+            _mockPostAuditUseCase.Setup(x => x.CreateAdminAudit(It.IsAny<CreateAdminAuditRequest>()));
+            var result = _classUnderTest.GenerateAdminAuditLog(It.IsAny<CreateAdminAuditRequest>()) as NoContentResult;
 
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(204);
         }
 
         [Test]
-        public void EnsureControllerPostMethodCallsPostAuditUseCaseForResidentAudit()
+        public async Task EnsureControllerPostMethodCallsPostAuditUseCaseForResidentAudit()
         {
-            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(It.IsAny<CreateResidentAuditRequest>()));
-            _classUnderTest.GenerateResidentAuditLog(It.IsAny<CreateResidentAuditRequest>());
+            var response = new AddResidentAuditResponse
+            {
+                success = true
+            };
+            var request = new CreateResidentAuditRequest
+            {
 
+            };
+            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(request)).ReturnsAsync(response);
+            var result = await _classUnderTest.GenerateResidentAuditLog(request).ConfigureAwait(true);
             _mockPostAuditUseCase.Verify(x => x.CreateResidentAudit(It.IsAny<CreateResidentAuditRequest>()), Times.Once);
         }
 
         [Test]
-        public void ControllerPostMethodShouldReturnResponseOfTypeNoContentResultForResidentAudit()
+        public async Task ControllerPostMethodShouldReturnResponseOfTypeNoContentResultForResidentAudit()
         {
-            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(It.IsAny<CreateResidentAuditRequest>()));
-            var result = _classUnderTest.GenerateResidentAuditLog(It.IsAny<CreateResidentAuditRequest>()) as NoContentResult;
+            var response = new AddResidentAuditResponse
+            {
+                success = true
+            };
+            var request = new CreateResidentAuditRequest
+            {
 
+            };
+
+            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(request)).ReturnsAsync(response);
+            var result = await _classUnderTest.GenerateResidentAuditLog(request).ConfigureAwait(true) as NoContentResult;
             result.Should().NotBeNull();
             result.Should().BeOfType<NoContentResult>();
         }
 
         [Test]
-        public void ControllerPostMethodShouldReturn204StatusCodeForResidentAudit()
+        public async Task ControllerPostMethodShouldReturn204StatusCodeForResidentAudit()
         {
-            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(It.IsAny<CreateResidentAuditRequest>()));
-            var result = _classUnderTest.GenerateResidentAuditLog(It.IsAny<CreateResidentAuditRequest>()) as NoContentResult;
+            var response = new AddResidentAuditResponse
+            {
+                success = true
+            };
+            var request = new CreateResidentAuditRequest
+            {
 
+            };
+            _mockPostAuditUseCase.Setup(x => x.CreateResidentAudit(request)).ReturnsAsync(response);
+            var result = await _classUnderTest.GenerateResidentAuditLog(request).ConfigureAwait(true) as NoContentResult;
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(204);
         }
@@ -93,9 +115,9 @@ namespace RentAccountApi.Tests.V1.Controllers
         [Test]
         public async Task GetAuditsReturnsAuditAnd200()
         {
-            var audits = new List<AuditResponse>()
+            var audits = new List<AdminAuditResponse>()
             {
-                new AuditResponse()
+                new AdminAuditResponse()
                 {
                     User = "john.doe@missing.com",
                     TimeStamp = "2020-08-26T08:16:19.1571481",
@@ -122,9 +144,9 @@ namespace RentAccountApi.Tests.V1.Controllers
         [Test]
         public async Task GetAuditWithNoQuerystringReturns400AndException()
         {
-            var audits = new List<AuditResponse>()
+            var audits = new List<AdminAuditResponse>()
             {
-                new AuditResponse()
+                new AdminAuditResponse()
                 {
                     User = "john.doe@missing.com",
                     TimeStamp = "2020-08-26T08:16:19.1571481",

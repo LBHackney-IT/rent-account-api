@@ -31,7 +31,7 @@ namespace RentAccountApi.V1.UseCase
         public async Task<AddResidentAuditResponse> CreateResidentAudit(CreateResidentAuditRequest residentAuditRequest)
         {
             var token = await _crmTokenGateway.GetCRMToken();
-            var residentAuditResponse = await _crmGateway.GenerateResidentAuditRecord(AuditFactory.ToResidentAuditRequest(residentAuditRequest),token);
+            var residentAuditResponse = await _crmGateway.GenerateResidentAuditRecord(AuditFactory.ToResidentAuditRequest(residentAuditRequest), token);
             var addResidentAuditResponse = new AddResidentAuditResponse
             {
                 success = residentAuditResponse
