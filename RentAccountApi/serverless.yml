@@ -30,6 +30,8 @@ functions:
       CRM_API_ENDPOINT: ${ssm:/rent-account-api/${self:provider.stage}/crm-api-endpoint}
       CRM_TOKEN_ENDPOINT: ${ssm:/rent-account-api/${self:provider.stage}/crm-token-endpoint}
       CRM_TOKEN_KEY: ${ssm:/rent-account-api/${self:provider.stage}/crm-token-key}
+      CRM_TOKEN_API: ${ssm:/rent-account-api/${self:provider.stage}/crm-token-api}
+      CRM_TOKEN_API_KEY: ${ssm:/rent-account-api/${self:provider.stage}/crm-token-api-key}
       ENV: ${self:provider.stage}
     events:
       - http:

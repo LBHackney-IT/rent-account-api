@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RentAccountApi.V1.Gateways
@@ -21,9 +22,12 @@ namespace RentAccountApi.V1.Gateways
 
         public async Task<string> GetCRMToken()
         {
+            var content = new StringContent("", Encoding.UTF8, "application/json");
             var builder = new UriBuilder(_client.BaseAddress);
-            var response = await _client.GetAsync(builder.Uri).ConfigureAwait(true);
-            var key = await response.Content.ReadAsStringAsync();
+            var response = await _client.PostAsync(builder.Uri, content).ConfigureAwait(true);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<CrmTokenResponse>(responseContent);
+            var key = result.accessToken;
             return key;
         }
     }

@@ -151,13 +151,13 @@ namespace RentAccountApi
                 a.BaseAddress = new Uri(crmUrl);
             });
 
-            var crmTokenUrl = Environment.GetEnvironmentVariable("CRM_TOKEN_ENDPOINT");
-            var crmTokenKey = Environment.GetEnvironmentVariable("CRM_TOKEN_KEY");
+            var crmTokenUrl = Environment.GetEnvironmentVariable("CRM_TOKEN_API");
+            var crmTokenKey = Environment.GetEnvironmentVariable("CRM_TOKEN_API_KEY");
 
             services.AddHttpClient<ICRMTokenGateway, CRMTokenGateway>(a =>
             {
                 a.BaseAddress = new Uri(crmTokenUrl);
-                a.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", crmTokenKey);
+                a.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", crmTokenKey);
             });
         }
 
