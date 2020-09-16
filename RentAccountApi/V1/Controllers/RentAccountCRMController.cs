@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Amazon.Lambda.Core;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RentAccountApi.V1.Boundary.Request;
@@ -23,13 +24,15 @@ namespace RentAccountApi.V1.Controllers
         private readonly IGetRentAccountUseCase _getRentAccountUseCase;
         private readonly IGetLinkedAccountUseCase _getLinkedAccountUseCase;
         private readonly IDeleteLinkedAccountUseCase _deleteLinkedAccountUseCase;
+        private readonly ICreateLinkedAccountUseCase _createLinkedAccountUseCase;
 
-        public RentAccountCRMController(ICheckRentAccountExistsUseCase checkRentAccountExistsUseCase, IGetRentAccountUseCase getRentAccountUseCase, IGetLinkedAccountUseCase getLinkedAccountUseCase, IDeleteLinkedAccountUseCase deleteLinkedAccountUseCase)
+        public RentAccountCRMController(ICheckRentAccountExistsUseCase checkRentAccountExistsUseCase, IGetRentAccountUseCase getRentAccountUseCase, IGetLinkedAccountUseCase getLinkedAccountUseCase, IDeleteLinkedAccountUseCase deleteLinkedAccountUseCase, ICreateLinkedAccountUseCase createLinkedAccountUseCase)
         {
             _checkRentAccountExistsUseCase = checkRentAccountExistsUseCase;
             _getRentAccountUseCase = getRentAccountUseCase;
             _getLinkedAccountUseCase = getLinkedAccountUseCase;
             _deleteLinkedAccountUseCase = deleteLinkedAccountUseCase;
+            _createLinkedAccountUseCase = createLinkedAccountUseCase;
         }
 
         /// <summary>
@@ -105,6 +108,41 @@ namespace RentAccountApi.V1.Controllers
         }
 
         /// <summary>
+        /// Create linked account
+        /// </summary>
+        /// <response code="200">Linked account created</response>
+        /// <response code="500">There was a problem creating the linked account</response>
+        [HttpPost]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(CreateLinkedAccountResponse), StatusCodes.Status200OK)]
+        [Route("linkedaccount")]
+        public async Task<IActionResult> CreateLinkedAccount(CreateLinkedAccountRequest createLinkedAccountRequest)
+        {
+            try
+            {
+                var response = await _createLinkedAccountUseCase.Execute(createLinkedAccountRequest);
+                if (response != null)
+                {
+                    return Ok(response);
+                }
+                else
+                {
+                    return StatusCode(404, "Linked account could not be created, please check values");
+                }
+            }
+            catch (MissingLinkedAccountRequestParameterException e)
+            {
+                LambdaLogger.Log(e.Message);
+                return BadRequest(e.Message);
+            }
+            catch (Exception ex)
+            {
+                LambdaLogger.Log(ex.Message);
+                return StatusCode(500, "An error has occured");
+            }
+        }
+
+        /// <summary>
         /// Retrieves linked account
         /// </summary>
         /// <response code="200">Linked account returned</response>
@@ -142,7 +180,7 @@ namespace RentAccountApi.V1.Controllers
 
 
         /// <summary>
-        /// Retrieves linked account
+        /// Deletes linked account
         /// </summary>
         /// <response code="204">Linked account deleted</response>
         /// <response code="404">Linked account does not exist</response>

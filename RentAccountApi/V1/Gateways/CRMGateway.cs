@@ -1,7 +1,9 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RentAccountApi.V1.Boundary;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
+using RentAccountApi.V1.Factories;
 using RentAccountApi.V1.Gateways.Helpers;
 using System;
 using System.Collections.Generic;
@@ -94,6 +96,33 @@ namespace RentAccountApi.V1.Gateways
             var response = await _client.PostAsync(new Uri($"hackney_housingaccountaudits()", UriKind.Relative), content).ConfigureAwait(true);
             var status = (int) response.StatusCode;
             return status == 204 ? true : false;
+        }
+
+        public async Task<string> GetCrmAccountId(string rentAccountNumber, string token)
+        {
+            _client.DefaultRequestHeaders.Add("Authorization", token);
+            var response = await _client.GetAsync(new Uri($"accounts?$select=accountid&$filter=housing_u_saff_rentacc eq '{rentAccountNumber}'", UriKind.Relative)).ConfigureAwait(true);
+            var jsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+            if (jsonResponse["value"].HasValues)
+            {
+                var accountId = jsonResponse["value"].FirstOrDefault()["accountid"].ToString();
+                return accountId;
+            }
+            return null;
+        }
+
+        public async Task<string> CreateLinkedAccount(string crmAccountID, string cssoId)
+        {
+            _client.DefaultRequestHeaders.Add("Prefer", "return=representation");
+            var linkedAccountObject = CRMFactory.BuildLinkAccountObj(crmAccountID, cssoId);
+            var content = new StringContent(linkedAccountObject.ToString(), Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync(new Uri($"hackney_csso_linked_rent_accounts?$select=hackney_csso_linked_rent_accountid", UriKind.Relative), content).ConfigureAwait(true);
+            var jsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+            if (jsonResponse.HasValues)
+            {
+                return jsonResponse["hackney_csso_linked_rent_accountid"].ToString();
+            }
+            return null;
         }
     }
 }

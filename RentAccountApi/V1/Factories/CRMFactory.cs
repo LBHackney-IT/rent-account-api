@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json.Linq;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using RentAccountApi.V1.UseCase.Helpers;
@@ -69,6 +70,14 @@ namespace RentAccountApi.V1.Factories
             int daysUntilTuesday = ((int) DayOfWeek.Monday - (int) today.DayOfWeek + 7) % 7;
             DateTime nextTuesday = today.AddDays(daysUntilTuesday);
             return nextTuesday;
+        }
+
+        public static JObject BuildLinkAccountObj(string crmAccountID, string cssoId)
+        {
+            JObject link = new JObject();
+            link["hackney_csso_id"] = cssoId;
+            link["hackney_account_id@odata.bind"] = $"/accounts({crmAccountID})";
+            return link;
         }
     }
 }
