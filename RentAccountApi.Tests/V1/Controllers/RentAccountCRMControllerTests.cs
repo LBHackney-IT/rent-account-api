@@ -23,6 +23,7 @@ namespace RentAccountApi.Tests.V1.Controllers
         private Mock<IGetRentAccountUseCase> _getRentAccountUseCase;
         private Mock<IGetLinkedAccountUseCase> _getLinkedAccountUseCase;
         private Mock<IDeleteLinkedAccountUseCase> _deleteLinkedAccountUseCase;
+        private Mock<ICreateLinkedAccountUseCase> _createLinkedAccountUseCase;
         private Faker _faker;
 
         [SetUp]
@@ -32,7 +33,8 @@ namespace RentAccountApi.Tests.V1.Controllers
             _getRentAccountUseCase = new Mock<IGetRentAccountUseCase>();
             _getLinkedAccountUseCase = new Mock<IGetLinkedAccountUseCase>();
             _deleteLinkedAccountUseCase = new Mock<IDeleteLinkedAccountUseCase>();
-            _classUnderTest = new RentAccountCRMController(_checkRentAccountExistsUseCase.Object, _getRentAccountUseCase.Object, _getLinkedAccountUseCase.Object, _deleteLinkedAccountUseCase.Object);
+            _createLinkedAccountUseCase = new Mock<ICreateLinkedAccountUseCase>();
+            _classUnderTest = new RentAccountCRMController(_checkRentAccountExistsUseCase.Object, _getRentAccountUseCase.Object, _getLinkedAccountUseCase.Object, _deleteLinkedAccountUseCase.Object, _createLinkedAccountUseCase.Object);
             _faker = new Faker();
         }
 
@@ -167,6 +169,48 @@ namespace RentAccountApi.Tests.V1.Controllers
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(404);
             response.Value.Should().Be("Linked account not found");
+        }
+
+        #endregion
+
+        #region Post tests
+
+        [Test]
+        public async Task CreateLinkedAccountWithInvalidValuesReturns404()
+        {
+            var createLinkedAccountResponse = new CreateLinkedAccountResponse();
+            createLinkedAccountResponse = null;
+
+            var createLinkedAccountRequest = new CreateLinkedAccountRequest();
+            {
+
+            };
+
+            _createLinkedAccountUseCase.Setup(x => x.Execute(createLinkedAccountRequest)).ReturnsAsync(createLinkedAccountResponse);
+            var response = (await _classUnderTest.CreateLinkedAccount(createLinkedAccountRequest).ConfigureAwait(true) as IActionResult) as ObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(404);
+            response.Value.Should().Be("Linked account could not be created, please check values");
+        }
+
+        [Test]
+        public async Task CreateLinkedAccountCorrectTypeAnd200()
+        {
+            var createLinkedAccountResponse = new CreateLinkedAccountResponse
+            {
+
+            };
+
+            var createLinkedAccountRequest = new CreateLinkedAccountRequest
+            {
+
+            };
+
+            _createLinkedAccountUseCase.Setup(x => x.Execute(createLinkedAccountRequest)).ReturnsAsync(createLinkedAccountResponse);
+            var response = (await _classUnderTest.CreateLinkedAccount(createLinkedAccountRequest).ConfigureAwait(true) as IActionResult) as OkObjectResult;
+            response.Should().NotBeNull();
+            response.Value.Should().BeOfType<CreateLinkedAccountResponse>();
+            response.StatusCode.Should().Be(200);
         }
 
         #endregion
