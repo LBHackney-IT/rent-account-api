@@ -15,5 +15,7 @@ namespace RentAccountApi.V1.Gateways
         Task<CrmLinkedAccountResponse> GetLinkedAccount(string cssoId, string token);
         Task<bool> DeleteLinkedAccount(string linkId);
         Task<bool> GenerateResidentAuditRecord(MyRentAccountResidentAudit myRentAccountResidentAudit, string token);
+        Task<string> GetCrmAccountId(string rentAccountNumber, string token);
+        Task<string> CreateLinkedAccount(string crmAccountID, string cssoId);
     }
 }
