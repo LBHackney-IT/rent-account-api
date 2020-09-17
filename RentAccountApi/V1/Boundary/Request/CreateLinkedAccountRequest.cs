@@ -8,7 +8,7 @@ namespace RentAccountApi.V1.Boundary.Request
         /// 12345678
         /// </example>
         [Required]
-        public string RentAccountNumber { get; set; }
+        public string AccountNumber { get; set; }
         /// <example>
         /// 123456bbdc9f04c50fd5f96208569736bbdfe44d6401614480542d7d42a2d123
         /// </example>
