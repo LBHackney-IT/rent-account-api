@@ -20,6 +20,7 @@ namespace RentAccountApi.Tests.V1.Controllers
     {
         private RentAccountTenancyController _classUnderTest;
         private Mock<IGetRentBreakdownUseCase> _getRentBreakdownUseCase;
+        private Mock<IGetTransactionsUseCase> _getTransactionsUseCase;
 
         private Faker _faker;
 
@@ -27,7 +28,8 @@ namespace RentAccountApi.Tests.V1.Controllers
         public void Setup()
         {
             _getRentBreakdownUseCase = new Mock<IGetRentBreakdownUseCase>();
-            _classUnderTest = new RentAccountTenancyController(_getRentBreakdownUseCase.Object);
+            _getTransactionsUseCase = new Mock<IGetTransactionsUseCase>();
+            _classUnderTest = new RentAccountTenancyController(_getRentBreakdownUseCase.Object, _getTransactionsUseCase.Object);
             _faker = new Faker();
         }
 
@@ -60,6 +62,60 @@ namespace RentAccountApi.Tests.V1.Controllers
             response.Value.Should().Be("Rent breakdown not found");
         }
 
+        [Test]
+        public async Task GetTransactionsAnd200()
+        {
+            var accountNumber = "12345";
+            var postCode = "E8 1DY";
+            var transactionsResponse = new TransactionsResponse
+            {
+                TransactionRequest = new TransactionRequest
+                {
+                    PaymentRef = accountNumber,
+                    PostCode = postCode
+                },
+                Transactions = new List<LBHTransactions>
+                {
+                    new LBHTransactions
+                    {
+                        Balance = "123.00",
+                        Date = DateTime.Now.ToString(),
+                        Description = "Some description",
+                        valueIn = "123.00"
+                    }
+                }
+            };
+
+            _getTransactionsUseCase.Setup(x => x.Execute(accountNumber, postCode)).ReturnsAsync(transactionsResponse);
+            var response = await _classUnderTest.GetTransactions(accountNumber, postCode).ConfigureAwait(true) as IActionResult as OkObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            response.Value.Should().BeOfType<TransactionsResponse>();
+            response.Value.Should().BeEquivalentTo(transactionsResponse);
+        }
+
+        [Test]
+        public async Task GetEmptyTransactions()
+        {
+            var accountNumber = "12345";
+            var postCode = "E8 1DY";
+            var transactionsResponse = new TransactionsResponse
+            {
+                TransactionRequest = new TransactionRequest
+                {
+                    PaymentRef = accountNumber,
+                    PostCode = postCode
+                },
+                Transactions = new List<LBHTransactions>()
+            };
+
+            _getTransactionsUseCase.Setup(x => x.Execute(accountNumber, postCode)).ReturnsAsync(transactionsResponse);
+            var response = await _classUnderTest.GetTransactions(accountNumber, postCode).ConfigureAwait(true) as IActionResult as OkObjectResult;
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            var transactionResponse = (TransactionsResponse) response.Value;
+            transactionResponse.Transactions.Count.Should().Equals(0);
+        }
         #endregion
 
     }
