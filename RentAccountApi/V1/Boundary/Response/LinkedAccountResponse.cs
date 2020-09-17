@@ -7,8 +7,8 @@ namespace RentAccountApi.V1.Boundary.Response
 {
     public class LinkedAccountResponse
     {
-        public string LinkedAccountId { get; set; }
-        public string CSSOId { get; set; }
-        public string AccountNumber { get; set; }
+        public string hackney_csso_linked_rent_accountid { get; set; }
+        public string csso_id { get; set; }
+        public string rent_account_number { get; set; }
     }
 }

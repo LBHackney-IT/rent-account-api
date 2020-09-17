@@ -111,31 +111,34 @@ namespace RentAccountApi.Tests.V1.Controllers
         {
             var linkedAccountResponse = new LinkedAccountResponse
             {
-                AccountNumber = "123",
-                CSSOId = "456",
-                LinkedAccountId = "789"
+                rent_account_number = "123",
+                csso_id = "456",
+                hackney_csso_linked_rent_accountid = "789"
             };
             var cssoId = "456";
 
             _getLinkedAccountUseCase.Setup(x => x.Execute(cssoId)).ReturnsAsync(linkedAccountResponse);
-            var response = (await _classUnderTest.GetLinkedAccount(cssoId).ConfigureAwait(true) as IActionResult) as OkObjectResult;
+            var response = await _classUnderTest.GetLinkedAccount(cssoId).ConfigureAwait(true) as IActionResult as OkObjectResult;
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
-            response.Value.Should().BeEquivalentTo(linkedAccountResponse);
+            response.Value.Should().BeOfType<List<LinkedAccountResponse>>();
+            var listResponse = (List<LinkedAccountResponse>) response.Value;
+            listResponse[0].Should().BeEquivalentTo(linkedAccountResponse);
         }
 
         [Test]
-        public async Task GetLinkedAccountWithInvalidRefReturns404()
+        public async Task GetLinkedAccountWithInvalidRefReturns200AndEmptyList()
         {
             var linkedAccountResponse = new LinkedAccountResponse();
-            linkedAccountResponse = null;
             var cssoId = "456";
 
             _getLinkedAccountUseCase.Setup(x => x.Execute(cssoId)).ReturnsAsync(linkedAccountResponse);
             var response = (await _classUnderTest.GetLinkedAccount(cssoId).ConfigureAwait(true) as IActionResult) as ObjectResult;
             response.Should().NotBeNull();
-            response.StatusCode.Should().Be(404);
-            response.Value.Should().Be("Linked account not found");
+            response.StatusCode.Should().Be(200);
+            response.Value.Should().BeOfType<List<LinkedAccountResponse>>();
+            var listResponse = (List<LinkedAccountResponse>) response.Value;
+            listResponse[0].Should().BeEquivalentTo(linkedAccountResponse);
         }
 
         #endregion
