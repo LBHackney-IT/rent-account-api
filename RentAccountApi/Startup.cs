@@ -148,6 +148,8 @@ namespace RentAccountApi
             var crmTokenKey = Environment.GetEnvironmentVariable("CRM_TOKEN_API_KEY");
             var rentAccountUrl = Environment.GetEnvironmentVariable("RENT_ACCOUNT_BREAKDOWN_API_ENDPOINT");
             var rentAccountKey = Environment.GetEnvironmentVariable("RENT_ACCOUNT_BREAKDOWN_API_KEY");
+            var transactionsUrl = Environment.GetEnvironmentVariable("TRANSACTIONS_API_ENDPOINT");
+            var transactionsKey = Environment.GetEnvironmentVariable("TRANSACTIONS_API_KEY");
 
             services.AddScoped<IAuditDatabaseGateway, AuditDatabaseGateway>();
 
@@ -167,6 +169,12 @@ namespace RentAccountApi
                 a.BaseAddress = new Uri(rentAccountUrl);
                 a.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", rentAccountKey);
             });
+
+            services.AddHttpClient<ITransactionsGateway, TransactionsGateway>(a =>
+            {
+                a.BaseAddress = new Uri(transactionsUrl);
+                a.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", transactionsKey);
+            });
         }
 
         private static void RegisterUseCases(IServiceCollection services)
@@ -179,6 +187,7 @@ namespace RentAccountApi
             services.AddScoped<IDeleteLinkedAccountUseCase, DeleteLinkedAccountUseCase>();
             services.AddScoped<ICreateLinkedAccountUseCase, CreateLinkedAccountUseCase>();
             services.AddScoped<IGetRentBreakdownUseCase, GetRentBreakdownUseCase>();
+            services.AddScoped<IGetTransactionsUseCase, GetTransactionsUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

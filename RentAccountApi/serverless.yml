@@ -34,6 +34,8 @@ functions:
       CRM_TOKEN_API_KEY: ${ssm:/rent-account-api/${self:provider.stage}/crm-token-api-key}
       RENT_ACCOUNT_BREAKDOWN_API_ENDPOINT: ${ssm:/rent-account-api/${self:provider.stage}/rent-account-breakdown-api-endpoint}
       RENT_ACCOUNT_BREAKDOWN_API_KEY: ${ssm:/rent-account-api/${self:provider.stage}/rent-account-breakdown-api-key}
+      TRANSACTIONS_API_ENDPOINT: ${ssm:/rent-account-api/${self:provider.stage}/transactions-api-endpoint}
+      TRANSACTIONS_API_KEY: ${ssm:/rent-account-api/${self:provider.stage}/transactions-api-key}
       ENV: ${self:provider.stage}
     events:
       - http:
