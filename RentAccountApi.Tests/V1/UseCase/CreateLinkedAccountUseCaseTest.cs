@@ -43,7 +43,7 @@ namespace RentAccountApi.Tests.V1.UseCase
             var createLinkedAccountRequest = new CreateLinkedAccountRequest
             {
                 CssoId = cssoID,
-                RentAccountNumber = rentAccountNumber
+                AccountNumber = rentAccountNumber
             };
 
             _mockCrmTokenGateway.Setup(x => x.GetCRMToken()).ReturnsAsync(token);
@@ -70,7 +70,7 @@ namespace RentAccountApi.Tests.V1.UseCase
             var createLinkedAccountRequest = new CreateLinkedAccountRequest
             {
                 CssoId = cssoID,
-                RentAccountNumber = rentAccountNumber
+                AccountNumber = rentAccountNumber
             };
 
             _mockCrmTokenGateway.Setup(x => x.GetCRMToken()).ReturnsAsync(token);

@@ -22,10 +22,12 @@ namespace RentAccountApi.V1.Controllers
     public class RentAccountTenancyController : BaseController
     {
         private readonly IGetRentBreakdownUseCase _getRentBreakdownUseCase;
+        private readonly IGetTransactionsUseCase _getTransactionsUseCase;
 
-        public RentAccountTenancyController(IGetRentBreakdownUseCase getRentBreakdownUseCase)
+        public RentAccountTenancyController(IGetRentBreakdownUseCase getRentBreakdownUseCase, IGetTransactionsUseCase getTransactionsUseCase)
         {
             _getRentBreakdownUseCase = getRentBreakdownUseCase;
+            _getTransactionsUseCase = getTransactionsUseCase;
         }
 
         /// <summary>
@@ -50,6 +52,41 @@ namespace RentAccountApi.V1.Controllers
                 else
                 {
                     return StatusCode(404, "Rent breakdown not found");
+                }
+            }
+            catch (MissingQueryParameterException e)
+            {
+                LambdaLogger.Log(e.Message);
+                return BadRequest(e.Message);
+            }
+            catch (Exception ex)
+            {
+                LambdaLogger.Log(ex.Message);
+                return StatusCode(500, "An error has occured");
+            }
+        }
+
+        /// <summary>
+        /// Gets transactions
+        /// </summary>
+        /// <response code="200">List of Transactions returned or empty list</response>
+        /// <response code="500">There was a problem retrieving the transactions</response>
+        [HttpGet]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(TransactionsResponse), StatusCodes.Status200OK)]
+        [Route("transactions/payment-ref/{accountNumber}/post-code/{postCode}")]
+        public async Task<IActionResult> GetTransactions(string accountNumber, string postCode)
+        {
+            try
+            {
+                var response = await _getTransactionsUseCase.Execute(accountNumber, postCode);
+                if (response != null)
+                {
+                    return Ok(response);
+                }
+                else
+                {//TODO: returning empty object rather than a 404 here
+                    return StatusCode(404, "Transactions not found");
                 }
             }
             catch (MissingQueryParameterException e)

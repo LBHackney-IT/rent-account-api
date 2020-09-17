@@ -28,7 +28,7 @@ namespace RentAccountApi.V1.UseCase
             var token = await _crmTokenGateway.GetCRMToken();
 
             //GetAccountID from crm
-            var crmAccountID = await _crmGateway.GetCrmAccountId(createLinkedAccountRequest.RentAccountNumber, token);
+            var crmAccountID = await _crmGateway.GetCrmAccountId(createLinkedAccountRequest.AccountNumber, token);
             //Create linked account
             if (crmAccountID == null)
             { return null; }
