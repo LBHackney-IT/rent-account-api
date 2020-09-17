@@ -146,9 +146,9 @@ namespace RentAccountApi.Tests.V1.Factories
 
             var linkedAccountResponse = new LinkedAccountResponse
             {
-                CSSOId = "456",
-                LinkedAccountId = "12345",
-                AccountNumber = "7890"
+                csso_id = "456",
+                hackney_csso_linked_rent_accountid = "12345",
+                rent_account_number = "7890"
             };
 
             var response = CRMFactory.ToLinkedAccountResponse(crmLinkedAccountResponse);

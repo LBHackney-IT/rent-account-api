@@ -145,12 +145,11 @@ namespace RentAccountApi.V1.Controllers
         /// <summary>
         /// Retrieves linked account
         /// </summary>
-        /// <response code="200">Linked account returned</response>
-        /// <response code="404">Linked account does not exist</response>
+        /// <response code="200">Linked account returned or empty list returned</response>
         /// <response code="500">There was a problem retrieving the linked account</response>
         [HttpGet]
         [Consumes(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(LinkedAccountResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<LinkedAccountResponse>), StatusCodes.Status200OK)]
         [Route("linkedaccount/{cssoId}")]
         public async Task<IActionResult> GetLinkedAccount(string cssoId)
         {
@@ -159,11 +158,15 @@ namespace RentAccountApi.V1.Controllers
                 var response = await _getLinkedAccountUseCase.Execute(cssoId);
                 if (response != null)
                 {
-                    return Ok(response);
+                    var responseList = new List<LinkedAccountResponse>()
+                    {
+                        response
+                    };
+                    return Ok(responseList);
                 }
                 else
                 {
-                    return StatusCode(404, "Linked account not found");
+                    return Ok(new List<LinkedAccountResponse>());
                 }
             }
             catch (MissingQueryParameterException e)
