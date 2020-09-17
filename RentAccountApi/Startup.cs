@@ -143,21 +143,29 @@ namespace RentAccountApi
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            services.AddScoped<IAuditDatabaseGateway, AuditDatabaseGateway>();
             var crmUrl = Environment.GetEnvironmentVariable("CRM_API_ENDPOINT");
+            var crmTokenUrl = Environment.GetEnvironmentVariable("CRM_TOKEN_API");
+            var crmTokenKey = Environment.GetEnvironmentVariable("CRM_TOKEN_API_KEY");
+            var rentAccountUrl = Environment.GetEnvironmentVariable("RENT_ACCOUNT_BREAKDOWN_API_ENDPOINT");
+            var rentAccountKey = Environment.GetEnvironmentVariable("RENT_ACCOUNT_BREAKDOWN_API_KEY");
+
+            services.AddScoped<IAuditDatabaseGateway, AuditDatabaseGateway>();
 
             services.AddHttpClient<ICRMGateway, CRMGateway>(a =>
             {
                 a.BaseAddress = new Uri(crmUrl);
             });
 
-            var crmTokenUrl = Environment.GetEnvironmentVariable("CRM_TOKEN_API");
-            var crmTokenKey = Environment.GetEnvironmentVariable("CRM_TOKEN_API_KEY");
-
             services.AddHttpClient<ICRMTokenGateway, CRMTokenGateway>(a =>
             {
                 a.BaseAddress = new Uri(crmTokenUrl);
                 a.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", crmTokenKey);
+            });
+
+            services.AddHttpClient<IRentBreakdownGateway, RentBreakdownGateway>(a =>
+            {
+                a.BaseAddress = new Uri(rentAccountUrl);
+                a.DefaultRequestHeaders.TryAddWithoutValidation("x-api-key", rentAccountKey);
             });
         }
 
@@ -170,6 +178,7 @@ namespace RentAccountApi
             services.AddScoped<IGetLinkedAccountUseCase, GetLinkedAccountUseCase>();
             services.AddScoped<IDeleteLinkedAccountUseCase, DeleteLinkedAccountUseCase>();
             services.AddScoped<ICreateLinkedAccountUseCase, CreateLinkedAccountUseCase>();
+            services.AddScoped<IGetRentBreakdownUseCase, GetRentBreakdownUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
