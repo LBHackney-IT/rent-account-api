@@ -61,9 +61,9 @@ namespace RentAccountApi.Tests.V1.UseCase
             var crmLinkedAccount = crmLinkedAccountResponse.value[0];
 
             response.Should().NotBeNull();
-            response.Result.CSSOId.Should().BeEquivalentTo(crmLinkedAccount.csso_id);
-            response.Result.AccountNumber.Should().BeEquivalentTo(crmLinkedAccount.rent_account_number);
-            response.Result.LinkedAccountId.Should().BeEquivalentTo(crmLinkedAccount.hackney_csso_linked_rent_accountid);
+            response.Result.csso_id.Should().BeEquivalentTo(crmLinkedAccount.csso_id);
+            response.Result.rent_account_number.Should().BeEquivalentTo(crmLinkedAccount.rent_account_number);
+            response.Result.hackney_csso_linked_rent_accountid.Should().BeEquivalentTo(crmLinkedAccount.hackney_csso_linked_rent_accountid);
         }
 
         [Test]

@@ -25,9 +25,9 @@ namespace RentAccountApi.V1.Factories
         {
             return new LinkedAccountResponse
             {
-                AccountNumber = crmLinkedAccountResponse.value[0].rent_account_number,
-                CSSOId = crmLinkedAccountResponse.value[0].csso_id,
-                LinkedAccountId = crmLinkedAccountResponse.value[0].hackney_csso_linked_rent_accountid
+                rent_account_number = crmLinkedAccountResponse.value[0].rent_account_number,
+                csso_id = crmLinkedAccountResponse.value[0].csso_id,
+                hackney_csso_linked_rent_accountid = crmLinkedAccountResponse.value[0].hackney_csso_linked_rent_accountid
             };
         }
 
