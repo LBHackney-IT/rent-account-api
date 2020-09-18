@@ -38,15 +38,7 @@ namespace RentAccountApi.V1.Gateways
             var response = await _client.GetAsync(new Uri("GetAllRentBreakdowns" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
             var results = JsonConvert.DeserializeObject<List<RentBreakdown>>(content);
-
-            if (results.Count > 0)
-            {
-                return results;
-            }
-            else
-            {
-                return null;
-            }
+            return results;
         }
     }
 }
