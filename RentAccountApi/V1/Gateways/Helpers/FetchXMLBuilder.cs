@@ -1,3 +1,4 @@
+using RentAccountApi.V1.Boundary.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +87,35 @@ namespace RentAccountApi.V1.Gateways.Helpers
             if (!string.IsNullOrEmpty(fetchXML)) queryDictionary.Add("fetchXml", fetchXML);
             var rqpString = new FormUrlEncodedContent(queryDictionary).ReadAsStringAsync().Result;
             return rqpString;
+        }
+
+        public static string BuildResidentAuditFetchXML(bool isDistinct, string queryValue, UsageReportRequest usageReportRequest)
+        {
+            var fetchXML = $@"<fetch aggregate='true' >
+                  <entity name='hackney_housingaccountaudit' >
+                    <attribute name='hackney_accountnumber' alias='recordcount' {(isDistinct ? "aggregate='countcolumn'  distinct='true'" : "aggregate='count'")}  />
+                    <filter>
+                            <condition attribute='createdon' operator='on-or-after' value='{usageReportRequest.StartDate:yyyy-MM-dd}' />
+                            <condition attribute='createdon' operator='on-or-before' value='{usageReportRequest.EndDate:yyyy-MM-dd}' />
+                      {(!string.IsNullOrEmpty(queryValue) ? $"<condition attribute='hackney_name' operator='like' value='{queryValue}%' />" : "")}
+                    </filter>
+                  </entity>
+                </fetch>";
+            return BuildDictionaryString(fetchXML);
+        }
+
+        public static string BuildLinkedAccountReportFetchXML(UsageReportRequest usageReportRequest)
+        {
+            var fetchXML = $@"<fetch aggregate='true' >
+                  <entity name='hackney_csso_linked_rent_account' >
+                    <attribute name='hackney_csso_linked_rent_accountid' alias='recordcount' aggregate='count' />
+                    <filter>
+                            <condition attribute='createdon' operator='on-or-after' value='{usageReportRequest.StartDate:yyyy-MM-dd}' />
+                            <condition attribute='createdon' operator='on-or-before' value='{usageReportRequest.EndDate:yyyy-MM-dd}' />
+                    </filter>
+                  </entity>
+                </fetch>";
+            return BuildDictionaryString(fetchXML);
         }
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json.Linq;
+using RentAccountApi.V1.Boundary.Request;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using RentAccountApi.V1.UseCase.Helpers;
@@ -19,6 +20,12 @@ namespace RentAccountApi.V1.Factories
             string firstPart = postCode.Substring(0, postCode.Length - 3).ToUpper();
             string secondPart = postCode.Substring(postCode.Length - 3).ToUpper();
             return $"{firstPart} {secondPart}";
+        }
+
+        public static void CheckUsageReportRequest(UsageReportRequest usageReportRequest)
+        {
+            if (usageReportRequest.StartDate > usageReportRequest.EndDate)
+                throw new UsageReportRequestException("Start date must be before end date");
         }
 
         public static LinkedAccountResponse ToLinkedAccountResponse(CrmLinkedAccountResponse crmLinkedAccountResponse)
