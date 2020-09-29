@@ -8,7 +8,7 @@ namespace RentAccountApi.V1.Boundary.Response
     public class UsageReportResponse
     {
         public string StartDate { get; set; }
-        public string EndDate { get; set; } 
+        public string EndDate { get; set; }
         public int? UniqueAnonymousUsers { get; set; }
         public int? TotalAnonymousLogins { get; set; }
         public int? UniqueCSSOUsers { get; set; }

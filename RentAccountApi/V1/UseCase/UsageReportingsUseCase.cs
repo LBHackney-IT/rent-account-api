@@ -1,5 +1,6 @@
 using RentAccountApi.V1.Boundary.Request;
 using RentAccountApi.V1.Boundary.Response;
+using RentAccountApi.V1.Domain;
 using RentAccountApi.V1.Factories;
 using RentAccountApi.V1.Gateways;
 using RentAccountApi.V1.UseCase.Interfaces;
@@ -23,7 +24,10 @@ namespace RentAccountApi.V1.UseCase
 
         public async Task<UsageReportResponse> Execute(UsageReportRequest usageReportRequest)
         {
-            CRMFactory.CheckUsageReportRequest(usageReportRequest);
+            if (!CRMFactory.ValidateUsageReportRequest(usageReportRequest))
+            {
+                throw new UsageReportRequestException("Start date must be before end date");
+            }
             var token = await _crmTokenGateway.GetCRMToken();
             var uniqueAnonymousUsers = await _crmGateway.GetUniqueAnonymousUsers(usageReportRequest, token);
             var totalAnonymousLogins = await _crmGateway.GetTotalAnonymousLogins(usageReportRequest);

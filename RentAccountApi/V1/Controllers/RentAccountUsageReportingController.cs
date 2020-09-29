@@ -21,7 +21,7 @@ namespace RentAccountApi.V1.Controllers
     public class RentAccountUsageReportingController : BaseController
     {
         private readonly IUsageReportingsUseCase _usageReportingUseCase;
-       
+
         public RentAccountUsageReportingController(IUsageReportingsUseCase usageReportingUseCase)
         {
             _usageReportingUseCase = usageReportingUseCase;
@@ -36,12 +36,12 @@ namespace RentAccountApi.V1.Controllers
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(UsageReportResponse), StatusCodes.Status200OK)]
         [Route("report")]
-        public async Task<IActionResult> RunCRMReport([FromQuery] UsageReportRequest usageReportRequest)
+        public async Task<IActionResult> RunUsageReport([FromQuery] UsageReportRequest usageReportRequest)
         {
             try
             {
                 var response = await _usageReportingUseCase.Execute(usageReportRequest);
-                return Ok(response);                
+                return Ok(response);
             }
             catch (UsageReportRequestException ex)
             {

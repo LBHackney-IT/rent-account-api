@@ -22,10 +22,12 @@ namespace RentAccountApi.V1.Factories
             return $"{firstPart} {secondPart}";
         }
 
-        public static void CheckUsageReportRequest(UsageReportRequest usageReportRequest)
+        public static bool ValidateUsageReportRequest(UsageReportRequest usageReportRequest)
         {
             if (usageReportRequest.StartDate > usageReportRequest.EndDate)
-                throw new UsageReportRequestException("Start date must be before end date");
+                return false;
+            else
+                return true;
         }
 
         public static LinkedAccountResponse ToLinkedAccountResponse(CrmLinkedAccountResponse crmLinkedAccountResponse)
