@@ -1,4 +1,5 @@
 using RentAccountApi.V1.Boundary;
+using RentAccountApi.V1.Boundary.Request;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using System;
@@ -17,5 +18,11 @@ namespace RentAccountApi.V1.Gateways
         Task<bool> GenerateResidentAuditRecord(MyRentAccountResidentAudit myRentAccountResidentAudit, string token);
         Task<string> GetCrmAccountId(string rentAccountNumber, string token);
         Task<string> CreateLinkedAccount(string crmAccountID, string cssoId);
+        Task<int?> GetUniqueAnonymousUsers(UsageReportRequest usageReportRequest, string token);
+        Task<int?> GetTotalAnonymousLogins(UsageReportRequest usageReportRequest);
+        Task<int?> GetUniqueCSSOUsers(UsageReportRequest usageReportRequest);
+        Task<int?> GetTotalCSSOLogins(UsageReportRequest usageReportRequest);
+        Task<int?> GetNewCSSOLinkedAccounts(UsageReportRequest usageReportRequest);
+        Task<int?> GetTotalLogins(UsageReportRequest usageReportRequest);
     }
 }

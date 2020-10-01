@@ -1,6 +1,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using RentAccountApi.Tests.V1.Helper;
+using RentAccountApi.V1.Boundary.Request;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using RentAccountApi.V1.Factories;
@@ -154,5 +155,32 @@ namespace RentAccountApi.Tests.V1.Factories
             var response = CRMFactory.ToLinkedAccountResponse(crmLinkedAccountResponse);
             response.Should().BeEquivalentTo(linkedAccountResponse);
         }
+
+        [Test]
+        public void CheckUsageReportRequestValidDateCheck()
+        {
+            var usageReportRequest = new UsageReportRequest
+            {
+                StartDate = Convert.ToDateTime("2020-08-01"),
+                EndDate = Convert.ToDateTime("2020-08-31")
+            };
+
+            var response = CRMFactory.ValidateUsageReportRequest(usageReportRequest);
+            response.Should().Be(true);
+        }
+
+        [Test]
+        public void CheckUsageReportRequestInValidDateCheck()
+        {
+            var usageReportRequest = new UsageReportRequest
+            {
+                StartDate = Convert.ToDateTime("2020-09-01"),
+                EndDate = Convert.ToDateTime("2020-08-31")
+            };
+
+            var response = CRMFactory.ValidateUsageReportRequest(usageReportRequest);
+            response.Should().Be(false);
+        }
+
     }
 }

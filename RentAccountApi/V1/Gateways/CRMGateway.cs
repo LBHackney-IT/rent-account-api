@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RentAccountApi.V1.Boundary;
+using RentAccountApi.V1.Boundary.Request;
 using RentAccountApi.V1.Boundary.Response;
 using RentAccountApi.V1.Domain;
 using RentAccountApi.V1.Factories;
@@ -121,6 +122,121 @@ namespace RentAccountApi.V1.Gateways
             if (jsonResponse.HasValues)
             {
                 return jsonResponse["hackney_csso_linked_rent_accountid"].ToString();
+            }
+            return null;
+        }
+
+        public async Task<int?> GetUniqueAnonymousUsers(UsageReportRequest usageReportRequest, string token)
+        {
+            var fetchXML = FetchXMLBuilder.BuildResidentAuditFetchXML(true, "Anonymous", usageReportRequest);
+            var builder = new UriBuilder()
+            {
+                Query = fetchXML
+            };
+            _client.DefaultRequestHeaders.Add("Authorization", token);
+
+            var response = await _client.GetAsync(new Uri("hackney_housingaccountaudits" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var jsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+            if (jsonResponse["value"].HasValues)
+            {
+                var recordCount = jsonResponse["value"].FirstOrDefault()["recordcount"].ToString();
+                return Int32.Parse(recordCount);
+            }
+            return null;
+        }
+
+        public async Task<int?> GetTotalAnonymousLogins(UsageReportRequest usageReportRequest)
+        {
+            var fetchXML = FetchXMLBuilder.BuildResidentAuditFetchXML(false, "Anonymous", usageReportRequest);
+            var builder = new UriBuilder()
+            {
+                Query = fetchXML
+            };
+
+            var response = await _client.GetAsync(new Uri("hackney_housingaccountaudits" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var jsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+            if (jsonResponse["value"].HasValues)
+            {
+                var accountId = jsonResponse["value"].FirstOrDefault()["recordcount"].ToString();
+                return Int32.Parse(accountId);
+            }
+            return null;
+        }
+
+        public async Task<int?> GetUniqueCSSOUsers(UsageReportRequest usageReportRequest)
+        {
+            var fetchXML = FetchXMLBuilder.BuildResidentAuditFetchXML(true, "One Account", usageReportRequest);
+            var builder = new UriBuilder()
+            {
+                Query = fetchXML
+            };
+
+            var response = await _client.GetAsync(new Uri("hackney_housingaccountaudits" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var jsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+            if (jsonResponse["value"].HasValues)
+            {
+                var accountId = jsonResponse["value"].FirstOrDefault()["recordcount"].ToString();
+                return Int32.Parse(accountId);
+            }
+            return null;
+        }
+
+        public async Task<int?> GetTotalCSSOLogins(UsageReportRequest usageReportRequest)
+        {
+            var fetchXML = FetchXMLBuilder.BuildResidentAuditFetchXML(false, "One Account", usageReportRequest);
+            var builder = new UriBuilder()
+            {
+                Query = fetchXML
+            };
+
+            var response = await _client.GetAsync(new Uri("hackney_housingaccountaudits" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var jsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+            if (jsonResponse["value"].HasValues)
+            {
+                var accountId = jsonResponse["value"].FirstOrDefault()["recordcount"].ToString();
+                return Int32.Parse(accountId);
+            }
+            return null;
+        }
+
+        public async Task<int?> GetNewCSSOLinkedAccounts(UsageReportRequest usageReportRequest)
+        {
+            var fetchXML = FetchXMLBuilder.BuildLinkedAccountReportFetchXML(usageReportRequest);
+            var builder = new UriBuilder()
+            {
+                Query = fetchXML
+            };
+
+            var response = await _client.GetAsync(new Uri("hackney_csso_linked_rent_accounts" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var jsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+            if (jsonResponse["value"].HasValues)
+            {
+                var accountId = jsonResponse["value"].FirstOrDefault()["recordcount"].ToString();
+                return Int32.Parse(accountId);
+            }
+            return null;
+        }
+
+        public async Task<int?> GetTotalLogins(UsageReportRequest usageReportRequest)
+        {
+            var fetchXML = FetchXMLBuilder.BuildResidentAuditFetchXML(true, "", usageReportRequest);
+            var builder = new UriBuilder()
+            {
+                Query = fetchXML
+            };
+
+            var response = await _client.GetAsync(new Uri("hackney_housingaccountaudits" + builder.Query, UriKind.Relative)).ConfigureAwait(true);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(true);
+            var jsonResponse = JsonConvert.DeserializeObject<JObject>(await response.Content.ReadAsStringAsync());
+            if (jsonResponse["value"].HasValues)
+            {
+                var accountId = jsonResponse["value"].FirstOrDefault()["recordcount"].ToString();
+                return Int32.Parse(accountId);
             }
             return null;
         }
